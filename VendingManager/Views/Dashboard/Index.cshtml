@@ -1,0 +1,55 @@
+﻿@model List<VendingManager.Models.Machine>
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Dashboard Automatów</h1>
+</div>
+
+<hr />
+
+<h3>Lista Maszyn (@Model.Count szt.)</h3>
+
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nazwa</th>
+            <th>Lokalizacja</th>
+            <th>Status</th>
+            <th>Ostatni Kontakt</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            @foreach (var machine in Model)
+            {
+                <tr>
+                    <td>@machine.Id</td>
+                    <td><strong>@machine.Name</strong></td>
+                    <td>@machine.Location</td>
+
+                    @if (machine.Status == "Online")
+                    {
+                        <td class="text-success">@machine.Status</td>
+                    }
+                    else
+                    {
+                        <td class="text-danger">@machine.Status</td>
+                    }
+
+                    <td>@machine.LastContact.ToString("yyyy-MM-dd HH:mm")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center text-muted">Brak maszyn w systemie.</td>
+            </tr>
+        }
+    </tbody>
+</table>
