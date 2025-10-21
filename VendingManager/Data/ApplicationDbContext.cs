@@ -6,6 +6,7 @@ namespace VendingManager.Data
     public class ApplicationDbContext : DbContext
     {
         public DbSet<Machine> Machines { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 

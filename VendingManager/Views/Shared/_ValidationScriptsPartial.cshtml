@@ -1,2 +1,32 @@
 ﻿<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript">
+    if ($.validator) {
+
+        // 1. Poprawka dla walidatora "number"
+        // (Sprawdza, czy "3,5" jest poprawną liczbą)
+        $.validator.methods.number = function (value, element) {
+            var valueWithDot = value.replace(",", ".");
+            // Użyj domyślnego walidatora, ale na wartości z kropką
+            return this.optional(element) || /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:[\.,]\d+)?$/.test(valueWithDot);
+        };
+
+        // 2. Poprawka dla walidatora "range"
+        // (Sprawdza, czy "3,5" jest pomiędzy "0,01" a "1000,00")
+        $.validator.methods.range = function (value, element, param) {
+            // param to tablica [min, max], np. ["0,01", "1000,00"]
+            // value to input użytkownika, np. "3,5"
+
+            // Konwertujemy wszystko na format z kropką, aby JavaScript mógł to porównać
+            var valueWithDot = (value + "").replace(",", ".");
+            var minWithDot = (param[0] + "").replace(",", ".");
+            var maxWithDot = (param[1] + "").replace(",", ".");
+
+            var val = parseFloat(valueWithDot);
+            var min = parseFloat(minWithDot);
+            var max = parseFloat(maxWithDot);
+
+            return this.optional(element) || (val >= min && val <= max);
+        };
+    }
+</script>
