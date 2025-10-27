@@ -12,5 +12,6 @@ namespace VendingManager.Models
         public string Location { get; set; } = "Brak lokalizacji";
         public string Status { get; set; } = "Offline";
         public DateTime LastContact {  get; set; }
+        public virtual ICollection<MachineSlot> Slots { get; set; } = new List<MachineSlot>();
     }
 }
