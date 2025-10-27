@@ -1,0 +1,13 @@
+﻿### Wysyła sygnał Heartbeat do maszyny o ID = 1
+POST https://localhost:7072/api/machine/1/heartbeat
+Content-Type: application/json
+
+
+### Wysyła sygnał Heartbeat do maszyny o ID = 2
+POST https://localhost:7072/api/machine/2/heartbeat
+Content-Type: application/json
+
+
+### Test nieistniejącej maszyny
+POST https://localhost:7072/api/machine/999/heartbeat
+Content-Type: application/json
