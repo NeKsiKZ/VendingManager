@@ -8,6 +8,7 @@ namespace VendingManager.Data
         public DbSet<Machine> Machines { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<MachineSlot> MachineSlots { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 

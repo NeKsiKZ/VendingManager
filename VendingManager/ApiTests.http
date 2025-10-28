@@ -11,3 +11,11 @@ Content-Type: application/json
 ### Test nieistniejącej maszyny
 POST https://localhost:7072/api/machine/999/heartbeat
 Content-Type: application/json
+
+### Rejestruje sprzedaż produktu (ID=2) z automatu (ID=1)
+POST https://localhost:7072/api/machine/1/sale
+Content-Type: application/json
+
+{
+  "productId": 2
+}
