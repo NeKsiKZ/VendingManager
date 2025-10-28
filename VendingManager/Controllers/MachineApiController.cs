@@ -6,9 +6,11 @@ using VendingManager.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Reflection.Metadata.Ecma335;
+using VendingManager.Filters;
 
 namespace VendingManager.Controllers
 {
+    [ServiceFilter(typeof(ApiKeyAuthFilter))]
     [ApiController]
     [Route("api/machine")]
     public class MachineApiController : ControllerBase

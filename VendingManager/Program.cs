@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using VendingManager.Data;
 using Microsoft.AspNetCore.Identity;
+using VendingManager.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<ApiKeyAuthFilter>();
 
 var app = builder.Build();
 

@@ -1,20 +1,16 @@
-﻿### Wysyła sygnał Heartbeat do maszyny o ID = 1
+﻿### TEST BEZ KLUCZA API (Powinien zwrócić błąd 401)
 POST https://localhost:7072/api/machine/1/heartbeat
 Content-Type: application/json
 
-
-### Wysyła sygnał Heartbeat do maszyny o ID = 2
-POST https://localhost:7072/api/machine/2/heartbeat
+### TEST "HEARTBEAT" Z KLUCZEM (Powinien zwrócić 200 OK)
+POST https://localhost:7072/api/machine/1/heartbeat
 Content-Type: application/json
+X-API-KEY: Zmp5pH2Na2h7RqgRRZWf7GcMGnz6TDxR
 
-
-### Test nieistniejącej maszyny
-POST https://localhost:7072/api/machine/999/heartbeat
-Content-Type: application/json
-
-### Rejestruje sprzedaż produktu (ID=2) z automatu (ID=1)
+### TEST SPRZEDAŻY Z KLUCZEM (Powinien zwrócić 201 Created)
 POST https://localhost:7072/api/machine/1/sale
 Content-Type: application/json
+X-API-KEY: Zmp5pH2Na2h7RqgRRZWf7GcMGnz6TDxR
 
 {
   "productId": 2
