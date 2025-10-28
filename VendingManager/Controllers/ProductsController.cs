@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using VendingManager.Data;
 using VendingManager.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VendingManager.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;

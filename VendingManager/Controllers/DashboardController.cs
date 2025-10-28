@@ -5,9 +5,11 @@ using VendingManager.Data;
 using VendingManager.Models;
 using VendingManager.ViewModels;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VendingManager.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;

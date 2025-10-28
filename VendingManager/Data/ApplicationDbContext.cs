@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VendingManager.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace VendingManager.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public DbSet<Machine> Machines { get; set; }
         public DbSet<Product> Products { get; set; }
