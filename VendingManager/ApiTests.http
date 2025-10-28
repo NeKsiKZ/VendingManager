@@ -5,12 +5,12 @@ Content-Type: application/json
 ### TEST "HEARTBEAT" Z KLUCZEM (Powinien zwrócić 200 OK)
 POST https://localhost:7072/api/machine/1/heartbeat
 Content-Type: application/json
-X-API-KEY: Zmp5pH2Na2h7RqgRRZWf7GcMGnz6TDxR
+X-API-KEY: {{apiKey}}
 
 ### TEST SPRZEDAŻY Z KLUCZEM (Powinien zwrócić 201 Created)
 POST https://localhost:7072/api/machine/1/sale
 Content-Type: application/json
-X-API-KEY: Zmp5pH2Na2h7RqgRRZWf7GcMGnz6TDxR
+X-API-KEY: {{apiKey}}
 
 {
   "productId": 2
