@@ -22,9 +22,9 @@ namespace VendingManager.Controllers
         {
             var today = DateTime.Today;
 
-            DateTime filterStart = startDate ?? new DateTime(today.Year, today.Month, 1);
+            DateTime filterStart = startDate ?? new DateTime(today.Year, 1, 1);
 
-            DateTime filterEnd = endDate ?? filterStart.AddMonths(1).AddDays(-1);
+            DateTime filterEnd = endDate ?? today;
 
             DateTime filterEndInclusive = filterEnd.AddDays(1).AddTicks(-1);
 
@@ -46,6 +46,16 @@ namespace VendingManager.Controllers
                 })
                 .OrderByDescending(x => x.Count)
                 .FirstOrDefault();
+
+            var monthlyRevenue = transactions
+                .GroupBy(t => new { t.TransactionDate.Year, t.TransactionDate.Month })
+                .Select(g => new
+                {
+                    MonthYear = new DateTime(g.Key.Year, g.Key.Month, 1),
+                    Revenue = g.Sum(t => t.SalePrice)
+                })
+                .OrderBy(x => x.MonthYear)
+                .ToList();
 
             var machines = await _context.Machines
                                          .Include(m => m.Slots)
@@ -81,6 +91,8 @@ namespace VendingManager.Controllers
                 TotalTransactions = totalTransactions,
                 BestSellingProduct = bestSellingProductQuery?.ProductName ?? "Brak danych",
                 BestSellingProductCount = bestSellingProductQuery?.Count ?? 0,
+                ChartLabels = monthlyRevenue.Select(x => x.MonthYear.ToString("MMMM yyyy", new CultureInfo("pl-PL"))).ToList(),
+                ChartData = monthlyRevenue.Select(x => x.Revenue).ToList(),
 
                 MachineStatuses = machineStatusList
             };

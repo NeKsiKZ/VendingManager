@@ -29,5 +29,7 @@ namespace VendingManager.ViewModels
         public int BestSellingProductCount { get; set; }
 
         public List<MachineStatusViewModel> MachineStatuses { get; set; } = new List<MachineStatusViewModel>();
+        public List<string> ChartLabels { get; set; } = new List<string>();
+        public List<decimal> ChartData { get; set; } = new List<decimal>();
     }
 }
