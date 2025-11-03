@@ -1,0 +1,110 @@
+﻿@model VendingManager.ViewModels.RestockingViewModel
+
+@{
+    ViewData["Title"] = "Lista do Zatowarowania";
+}
+
+<style>
+
+    .accordion-body table th:nth-child(1),
+    .accordion-body table td:nth-child(1) {
+        width: 45%;
+    }
+
+    .accordion-body table th:nth-child(2),
+    .accordion-body table td:nth-child(2) {
+        width: 25%;
+    }
+
+    .accordion-body table th:nth-child(3),
+    .accordion-body table td:nth-child(3) {
+        width: 30%;
+    }
+
+</style>
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+    <p class="lead text-muted">Automatyczne podsumowanie na podstawie slotów z zapełnieniem poniżej 25%.</p>
+</div>
+
+<hr />
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">
+                <h4>Lista Zakupów</h4>
+            </div>
+            <div class="card-body">
+                @if (Model.ShoppingList.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var item in Model.ShoppingList)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <strong>@item.ProductName</strong>
+                                <span class="badge bg-primary rounded-pill fs-6">
+                                    @item.TotalNeeded szt.
+                                </span>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-success">Wszystkie automaty są w pełni zatowarowane!</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h4>Lista Maszyn do Odwiedzenia (@Model.RouteList.Count)</h4>
+
+        @if (Model.RouteList.Any())
+        {
+            <div class="accordion" id="machineAccordion">
+                @foreach (var machine in Model.RouteList)
+                {
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading-@machine.MachineId">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@machine.MachineId" aria-expanded="true" aria-controls="collapse-@machine.MachineId">
+                                <strong>@machine.MachineName</strong> <span class="text-muted ms-2">(@machine.MachineLocation)</span>
+                            </button>
+                        </h2>
+                        <div id="collapse-@machine.MachineId" class="accordion-collapse collapse show" aria-labelledby="heading-@machine.MachineId">
+                            <div class="accordion-body">
+                                <table class="table table-sm table-borderless">
+                                    <thead>
+                                        <tr>
+                                            <th>Produkt</th>
+                                            <th>Aktualny Stan</th>
+                                            <th class="text-danger">Do Uzupełnienia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var slot in machine.SlotsToRestock)
+                                        {
+                                            <tr>
+                                                <td>@slot.ProductName</td>
+                                                <td>@slot.CurrentQuantity / @slot.Capacity</td>
+                                                <td class="text-danger">
+                                                    <strong>@slot.AmountToRefill szt.</strong>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-success">Brak maszyn wymagających interwencji.</p>
+        }
+    </div>
+</div>
