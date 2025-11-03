@@ -1,17 +1,42 @@
 ﻿### TEST BEZ KLUCZA API (Powinien zwrócić błąd 401)
+# Pamiętaj, aby zmienić port i wkleić klucz API!
 POST https://localhost:7072/api/machine/1/heartbeat
 Content-Type: application/json
 
 ### TEST "HEARTBEAT" Z KLUCZEM (Powinien zwrócić 200 OK)
+# Pamiętaj, aby zmienić port i wkleić klucz API!
 POST https://localhost:7072/api/machine/1/heartbeat
 Content-Type: application/json
 X-API-KEY: {{apiKey}}
 
 ### TEST SPRZEDAŻY Z KLUCZEM (Powinien zwrócić 201 Created)
+# Pamiętaj, aby zmienić port i wkleić klucz API!
 POST https://localhost:7072/api/machine/1/sale
 Content-Type: application/json
 X-API-KEY: {{apiKey}}
 
 {
   "productId": 2
+}
+
+### Loguje błąd dla maszyny (ID=1)
+# Pamiętaj, aby zmienić port i wkleić klucz API!
+POST https://localhost:7072/api/machine/1/error
+Content-Type: application/json
+X-API-KEY: {{apiKey}}
+
+{
+  "errorCode": "COIN_JAM",
+  "message": "Zacięcie mechanizmu monet (0.50 PLN)"
+}
+
+### Loguje błąd dla maszyny (ID=2)
+# Pamiętaj, aby zmienić port i wkleić klucz API!
+POST https://localhost:7072/api/machine/2/error
+Content-Type: application/json
+X-API-KEY: {{apiKey}}
+
+{
+  "errorCode": "TEMP_FAIL",
+  "message": "Błąd chłodzenia. Temperatura wzrosła do 15°C."
 }

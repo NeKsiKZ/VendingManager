@@ -1,25 +1,26 @@
-﻿@model IEnumerable<VendingManager.Models.Transaction>
+﻿@model IEnumerable<VendingManager.Models.MachineErrorLog>
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Historia Transakcji</h1>
+<h1>Dziennik Błędów</h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                Automat
+                @Html.DisplayNameFor(model => model.Machine.Name)
             </th>
             <th>
-                Produkt
+                @Html.DisplayNameFor(model => model.Timestamp)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TransactionDate)
+                @Html.DisplayNameFor(model => model.ErrorCode)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SalePrice)
+                @Html.DisplayNameFor(model => model.Message)
             </th>
             <th></th>
         </tr>
@@ -31,13 +32,13 @@
                 @Html.DisplayFor(modelItem => item.Machine.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Product.Name)
+                @Html.DisplayFor(modelItem => item.Timestamp)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TransactionDate)
+                @Html.DisplayFor(modelItem => item.ErrorCode)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SalePrice)
+                @Html.DisplayFor(modelItem => item.Message)
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a>

@@ -91,5 +91,30 @@ namespace VendingManager.Controllers
             }
             return CreatedAtAction(nameof(RecordSale), new { id = newTransaction.Id }, newTransaction);
         }
+
+        // POST /api/machine/1/error
+        [HttpPost("{id}/error")]
+        public async Task<IActionResult> LogError(int id, [FromBody] ErrorRequestDto errorRequest)
+        {
+            var machineExists = await _context.Machines.AnyAsync(m => m.Id == id);
+            if (!machineExists)
+            {
+                return NotFound(new { message = "Nie znaleziono maszyny o podanym ID." });
+            }
+
+            var errorLog = new MachineErrorLog
+            {
+                MachineId = id,
+                Timestamp = DateTime.Now,
+                ErrorCode = errorRequest.ErrorCode,
+                Message = errorRequest.Message
+            };
+
+            _context.MachineErrorLogs.Add(errorLog);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(LogError), new { id = errorLog.Id }, errorLog);
+        }
     }
 }
+
