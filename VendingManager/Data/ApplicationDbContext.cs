@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using VendingManager.Models;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace VendingManager.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<Machine> Machines { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -38,6 +39,13 @@ namespace VendingManager.Data
                     LastContact = seedDate.AddHours(-8)
                 }
             );
+
+            modelBuilder.Entity<Product>().HasData(
+            new Product { Id = 2, Name = "Fanta (Test)", Description = "Seed Data", Price = 3.00m },
+            new Product { Id = 3, Name = "Cola (Test)", Description = "Seed Data", Price = 3.50m },
+            new Product { Id = 4, Name = "Woda (Test)", Description = "Seed Data", Price = 3m },
+            new Product { Id = 10, Name = "Monster (Test)", Description = "Seed Data", Price = 7m }
+);
 
             modelBuilder.Entity<Transaction>().HasData(
                 // --- Transakcje z Października 2025 ---

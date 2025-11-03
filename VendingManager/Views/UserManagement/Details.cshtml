@@ -1,0 +1,28 @@
+﻿@model VendingManager.Models.AppUser
+
+@{
+    ViewData["Title"] = "Szczegóły Użytkownika";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>Użytkownik: @Model.UserName</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3">ID Użytkownika</dt>
+        <dd class="col-sm-9">@Model.Id</dd>
+
+        <dt class="col-sm-3">Email</dt>
+        <dd class="col-sm-9">@Model.Email</dd>
+
+        <dt class="col-sm-3">Potwierdzony Email</dt>
+        <dd class="col-sm-9">@Model.EmailConfirmed</dd>
+
+        <dt class="col-sm-3">Numer telefonu</dt>
+        <dd class="col-sm-9">@(Model.PhoneNumber ?? "Brak")</dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Wróć do listy</a>
+</div>

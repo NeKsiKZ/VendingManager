@@ -1,0 +1,31 @@
+﻿@model IEnumerable<VendingManager.Models.AppUser>
+
+@{
+    ViewData["Title"] = "Zarządzanie Użytkownikami";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>Użytkowników można dodawać przez publiczną stronę "Register".</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nazwa Użytkownika (Email)</th>
+            <th>Potwierdzony Email</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.EmailConfirmed</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-sm btn-info">Szczegóły</a> |
+                    <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-danger">Usuń</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

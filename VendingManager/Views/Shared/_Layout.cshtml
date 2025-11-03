@@ -44,6 +44,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="MachineErrorLogs" asp-action="Index">Dziennik Błędów</a>
                         </li>
 
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-info" asp-area="" asp-controller="UserManagement" asp-action="Index">Zarządzaj Użytk.</a>
+                            </li>
+                        }
+
                     </ul> <partial name="_LoginPartial.cshtml" />
                 </div>
             </div>
