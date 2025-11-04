@@ -1,0 +1,22 @@
+﻿services:
+  # 1. Nasza aplikacja .NET
+  vendingmanager-app:
+    build:
+      context: .
+      dockerfile: VendingManager/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=vendingmanager-db;Database=VendingManagerDB;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - vendingmanager-db
+
+  # 2. Nasza baza danych SQL Server
+  vendingmanager-db:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+    ports:
+      - "1433:1433"

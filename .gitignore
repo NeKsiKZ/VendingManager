@@ -10,3 +10,6 @@
 *.suo
 
 appsettings.Development.json
+
+# Ignoruj plik ze zmiennymi środowiskowymi Dockera
+.env
