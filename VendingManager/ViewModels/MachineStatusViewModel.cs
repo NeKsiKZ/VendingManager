@@ -7,8 +7,9 @@
         public string Location { get; set; } = "Brak lokalizacji";
         public string Status { get; set; } = "Offline";
         public DateTime LastContact { get; set; }
-        
-        public int FillPercentage { get; set; }
+		public double Latitude { get; set; }
+		public double Longitude { get; set; }
+		public int FillPercentage { get; set; }
         public bool IsStockLow { get; set; }
     }
 }

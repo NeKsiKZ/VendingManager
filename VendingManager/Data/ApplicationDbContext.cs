@@ -28,16 +28,20 @@ namespace VendingManager.Data
                     Name = "Automat GŁÓWNY",
                     Location = "Hol wejściowy, Budynek A",
                     Status = "Online",
-                    LastContact = seedDate.AddMinutes(-5)
-                },
+                    LastContact = seedDate.AddMinutes(-5),
+                    Latitude = 53.117015,
+                    Longitude = 23.146449
+				},
                 new Machine
                 {
                     Id = 2,
                     Name = "Automat PIĘTRO 2",
                     Location = "Korytarz przy windach",
                     Status = "Offline",
-                    LastContact = seedDate.AddHours(-8)
-                }
+                    LastContact = seedDate.AddHours(-8),
+                    Latitude = 53.133826,
+					Longitude = 23.134977
+				}
             );
 
             modelBuilder.Entity<Product>().HasData(
