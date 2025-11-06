@@ -1,0 +1,42 @@
+﻿@model VendingManager.ViewModels.ManageUserRolesViewModel
+
+@{
+    ViewData["Title"] = "Zarządzanie Rolami";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h4>Dla użytkownika: @Model.UserName</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" asp-action="ManageRoles">
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="UserName" />
+
+            <div class="card">
+                <div class="card-header">
+                    Wybierz role dla tego użytkownika
+                </div>
+                <div class="card-body">
+                    @for (int i = 0; i < Model.Roles.Count; i++)
+                    {
+                        <div class="form-check m-1">
+                            <input type="hidden" asp-for="Roles[i].RoleId" />
+                            <input type="hidden" asp-for="Roles[i].RoleName" />
+
+                            <input asp-for="Roles[i].IsSelected" class="form-check-input" />
+                            <label class="form-check-label" asp-for="Roles[i].IsSelected">
+                                @Model.Roles[i].RoleName
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="card-footer">
+                    <input type="submit" value="Zapisz zmiany" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
