@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VendingManager.Data;
 
@@ -11,9 +12,11 @@ using VendingManager.Data;
 namespace VendingManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251106124510_AddMachineCoordinates")]
+    partial class AddMachineCoordinates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -268,9 +271,9 @@ namespace VendingManager.Migrations
                         {
                             Id = 2,
                             LastContact = new DateTime(2025, 10, 20, 4, 0, 0, 0, DateTimeKind.Unspecified),
-                            Latitude = 53.133825999999999,
+                            Latitude = 53.073189999999997,
                             Location = "Korytarz przy windach",
-                            Longitude = 23.134976999999999,
+                            Longitude = 23.100539999999999,
                             Name = "Automat PIĘTRO 2",
                             Status = "Offline"
                         });

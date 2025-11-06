@@ -72,14 +72,16 @@ namespace VendingManager.Controllers
 
                 machineStatusList.Add(new MachineStatusViewModel
                 {
-                    Id = machine.Id,
-                    Name = machine.Name,
-                    Location = machine.Location,
-                    Status = machine.Status,
-                    LastContact = machine.LastContact,
-                    FillPercentage = fillPercentage,
-                    IsStockLow = fillPercentage < STOCK_LOW_THRESHOLD
-                });
+					Id = machine.Id,
+					Name = machine.Name,
+					Location = machine.Location,
+					Status = machine.Status,
+					LastContact = machine.LastContact,
+					FillPercentage = fillPercentage,
+					IsStockLow = fillPercentage < STOCK_LOW_THRESHOLD,
+					Latitude = machine.Latitude,
+					Longitude = machine.Longitude
+				});
             }
 
             var viewModel = new DashboardViewModel

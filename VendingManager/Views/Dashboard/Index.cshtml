@@ -32,6 +32,13 @@
 	.toast-error {
 		background-color: #dc3545;
 	}
+
+	#dashboardMap {
+		height: 400px;
+		width: 100%;
+		border-radius: 8px;
+		box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+	}
 </style>
 
 <div class="text-center">
@@ -122,6 +129,7 @@
 				<th>Ostatni Kontakt</th>
 			</tr>
 		</thead>
+
 		<tbody>
 			@if (Model.MachineStatuses.Any())
 			{
@@ -171,16 +179,49 @@
 				</tr>
 			}
 		</tbody>
+
 	</table>
+
+	<div class="row mb-3">
+		<div class="col">
+			<div id="dashboardMap"></div>
+		</div>
+	</div>
 
 	@section Scripts {
 		@{
+			var mapData = Model.MachineStatuses.Select(m => new
+			{
+				id = m.Id,
+				name = m.Name,
+				location = m.Location,
+				lat = m.Latitude,
+				lon = m.Longitude
+			}).ToList();
+			var machinesJson = Html.Raw(Json.Serialize(mapData));
+
 			var chartLabels = Html.Raw(Json.Serialize(Model.ChartLabels));
 			var chartData = Html.Raw(Json.Serialize(Model.ChartData));
 		}
 
 		<script>
 			document.addEventListener("DOMContentLoaded", function () {
+
+				var map = L.map('dashboardMap').setView([53.1325, 23.1688], 13);
+
+				L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+					attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+				}).addTo(map);
+
+				var machines = @machinesJson;
+
+				machines.forEach(function (machine) {
+					if (machine.lat !== 0 && machine.lon !== 0) {
+						L.marker([machine.lat, machine.lon])
+							.addTo(map)
+							.bindPopup(`<strong>${machine.name}</strong><br>${machine.location}`);
+					}
+				});
 
 				const ctx = document.getElementById('monthlyRevenueChart').getContext('2d');
 				new Chart(ctx, {
