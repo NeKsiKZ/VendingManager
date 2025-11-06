@@ -1,183 +1,260 @@
 ﻿@model VendingManager.ViewModels.DashboardViewModel
-@using System.Globalization @{
-    ViewData["Title"] = "Dashboard";
+@using System.Globalization
+
+@{
+	ViewData["Title"] = "Dashboard";
 }
+
+<style>
+	.signalr-toast {
+		position: fixed;
+		top: 20px;
+		right: 20px;
+		padding: 15px 20px;
+		border-radius: 8px;
+		color: #fff;
+		font-size: 1.1em;
+		z-index: 1050;
+		opacity: 0;
+		transform: translateX(100%);
+		transition: all 0.5s ease;
+	}
+
+		.signalr-toast.show {
+			opacity: 1;
+			transform: translateX(0);
+		}
+
+	.toast-success {
+		background-color: #198754;
+	}
+
+	.toast-error {
+		background-color: #dc3545;
+	}
+</style>
 
 <div class="text-center">
-    <h1 class="display-4">Dashboard Automatów</h1>
-</div>
 
-<div class="row justify-content-center mb-3">
-    <div class="col-md-8">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <form method="get" asp-controller="Dashboard" asp-action="Index" class="row g-3 align-items-end">
-                    <div class="col">
-                        <label asp-for="StartDate" class="form-label"></label>
-                        <input asp-for="StartDate" class="form-control" type="date" value="@Model.StartDate.ToString("yyyy-MM-dd")" />
-                    </div>
-                    <div class="col">
-                        <label asp-for="EndDate" class="form-label"></label>
-                        <input asp-for="EndDate" class="form-control" type="date" value="@Model.EndDate.ToString("yyyy-MM-dd")" />
-                    </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">Filtruj</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+	<div class="text-center">
+		<h1 class="display-4">Dashboard Automatów</h1>
+	</div>
 
-<hr />
+	<div class="row justify-content-center mb-3">
+		<div class="col-md-8">
+			<div class="card shadow-sm">
+				<div class="card-body">
+					<form method="get" asp-controller="Dashboard" asp-action="Index" class="row g-3 align-items-end">
+						<div class="col">
+							<label asp-for="StartDate" class="form-label"></label>
+							<input asp-for="StartDate" class="form-control" type="date" value="@Model.StartDate.ToString("yyyy-MM-dd")" />
+						</div>
+						<div class="col">
+							<label asp-for="EndDate" class="form-label"></label>
+							<input asp-for="EndDate" class="form-control" type="date" value="@Model.EndDate.ToString("yyyy-MM-dd")" />
+						</div>
+						<div class="col-auto">
+							<button type="submit" class="btn btn-primary">Filtruj</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
-<div class="row mb-3 g-3">
-    <div class="col-md-4">
-        <div class="card text-white bg-success shadow">
-            <div class="card-body">
-                <h5 class="card-title">@Html.DisplayNameFor(m => m.TotalRevenue)</h5>
-                <h2 class="card-text">@Model.TotalRevenue.ToString("C", new CultureInfo("pl-PL"))</h2>
-                <p class="card-text"><small>w wybranym okresie</small></p>
-            </div>
-        </div>
-    </div>
+	<hr />
 
-    <div class="col-md-4">
-        <div class="card shadow">
-            <div class="card-body">
-                <h5 class="card-title">@Html.DisplayNameFor(m => m.BestSellingProduct)</h5>
-                <h2 class="card-text">@Model.BestSellingProduct</h2>
-                <p class="card-text"><small>Sprzedano @Model.BestSellingProductCount szt.</small></p>
-            </div>
-        </div>
-    </div>
+	<div class="row mb-3 g-3">
+		<div class="col-md-4">
+			<div class="card text-white bg-success shadow">
+				<div class="card-body">
+					<h5 class="card-title">@Html.DisplayNameFor(m => m.TotalRevenue)</h5>
+					<h2 class="card-text">@Model.TotalRevenue.ToString("C", new CultureInfo("pl-PL"))</h2>
+					<p class="card-text"><small>w wybranym okresie</small></p>
+				</div>
+			</div>
+		</div>
 
-    <div class="col-md-4">
-        <div class="card shadow">
-            <div class="card-body">
-                <h5 class="card-title">@Html.DisplayNameFor(m => m.TotalTransactions)</h5>
-                <h2 class="card-text">@Model.TotalTransactions</h2>
-                <p class="card-text"><small>w wybranym okresie</small></p>
-            </div>
-        </div>
-    </div>
-</div>
+		<div class="col-md-4">
+			<div class="card shadow">
+				<div class="card-body">
+					<h5 class="card-title">@Html.DisplayNameFor(m => m.BestSellingProduct)</h5>
+					<h2 class="card-text">@Model.BestSellingProduct</h2>
+					<p class="card-text"><small>Sprzedano @Model.BestSellingProductCount szt.</small></p>
+				</div>
+			</div>
+		</div>
 
-<div class="row mb-3">
-    <div class="col">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Przychód miesięczny</h5>
+		<div class="col-md-4">
+			<div class="card shadow">
+				<div class="card-body">
+					<h5 class="card-title">@Html.DisplayNameFor(m => m.TotalTransactions)</h5>
+					<h2 class="card-text">@Model.TotalTransactions</h2>
+					<p class="card-text"><small>w wybranym okresie</small></p>
+				</div>
+			</div>
+		</div>
+	</div>
 
-                <div style="position: relative; height: 250px;">
-                    <canvas id="monthlyRevenueChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+	<div class="row mb-3">
+		<div class="col">
+			<div class="card shadow-sm">
+				<div class="card-body">
+					<h5 class="card-title">Przychód miesięczny</h5>
 
-<h3>Lista Maszyn (@Model.MachineStatuses.Count szt.)</h3>
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nazwa</th>
-            <th>Lokalizacja</th>
-            <th>Zapełnienie</th>
-            <th>Status</th>
-            <th>Ostatni Kontakt</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model.MachineStatuses.Any())
-        {
-            @foreach (var machine in Model.MachineStatuses)
-            {
-                <tr>
-                    <td>@machine.Id</td>
-                    <td><strong>@machine.Name</strong></td>
-                    <td>@machine.Location</td>
+					<div style="position: relative; height: 250px;">
+						<canvas id="monthlyRevenueChart"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-                    <td>
-                        @{
-                            string progressBarColor = "bg-success";
-                            if (machine.FillPercentage < 50) progressBarColor = "bg-warning";
-                            if (machine.IsStockLow) progressBarColor = "bg-danger";
-                        }
+	<h3>Lista Maszyn (@Model.MachineStatuses.Count szt.)</h3>
+	<table class="table table-striped table-hover">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Nazwa</th>
+				<th>Lokalizacja</th>
+				<th>Zapełnienie</th>
+				<th>Status</th>
+				<th>Ostatni Kontakt</th>
+			</tr>
+		</thead>
+		<tbody>
+			@if (Model.MachineStatuses.Any())
+			{
+				@foreach (var machine in Model.MachineStatuses)
+				{
+					<tr>
+						<td>@machine.Id</td>
+						<td><strong>@machine.Name</strong></td>
+						<td>@machine.Location</td>
 
-                        <div class="progress" style="height: 25px;">
-                            <div class="progress-bar @progressBarColor"
-                                 role="progressbar"
-                                 style="width: @machine.FillPercentage%;"
-                                 aria-valuenow="@machine.FillPercentage"
-                                 aria-valuemin="0"
-                                 aria-valuemax="100">
-                                <strong>@machine.FillPercentage%</strong>
-                            </div>
-                        </div>
-                    </td>
+						<td>
+							@{
+								string progressBarColor = "bg-success";
+								if (machine.FillPercentage < 50) progressBarColor = "bg-warning";
+								if (machine.IsStockLow) progressBarColor = "bg-danger";
+							}
 
-                    @if (machine.Status == "Online")
-                    {
-                        <td class="text-success">@machine.Status</td>
-                    }
-                    else
-                    {
-                        <td class="text-danger">@machine.Status</td>
-                    }
+							<div class="progress" style="height: 25px;">
+								<div class="progress-bar @progressBarColor"
+									 role="progressbar"
+									 style="width: @machine.FillPercentage%;"
+									 aria-valuenow="@machine.FillPercentage"
+									 aria-valuemin="0"
+									 aria-valuemax="100">
+									<strong>@machine.FillPercentage%</strong>
+								</div>
+							</div>
+						</td>
 
-                    <td>@machine.LastContact.ToString("yyyy-MM-dd HH:mm")</td>
-                </tr>
-            }
-        }
-        else
-        {
-            <tr>
-                <td colspan="6" class="text-center text-muted">Brak maszyn w systemie.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+						@if (machine.Status == "Online")
+						{
+							<td class="text-success">@machine.Status</td>
+						}
+						else
+						{
+							<td class="text-danger">@machine.Status</td>
+						}
 
-@section Scripts {
-    @{
-        var chartLabels = Html.Raw(Json.Serialize(Model.ChartLabels));
-        var chartData = Html.Raw(Json.Serialize(Model.ChartData));
-    }
+						<td>@machine.LastContact.ToString("yyyy-MM-dd HH:mm")</td>
+					</tr>
+				}
+			}
+			else
+			{
+				<tr>
+					<td colspan="6" class="text-center text-muted">Brak maszyn w systemie.</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+	@section Scripts {
+		@{
+			var chartLabels = Html.Raw(Json.Serialize(Model.ChartLabels));
+			var chartData = Html.Raw(Json.Serialize(Model.ChartData));
+		}
 
-            const ctx = document.getElementById('monthlyRevenueChart').getContext('2d');
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
 
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: @chartLabels,
-                    datasets: [{
-                        label: 'Przychód (PLN)',
-                        data: @chartData,
-                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                        borderColor: 'rgba(0, 123, 255, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function (value, index, values) {
-                                    return value + ' zł';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-}
+				const ctx = document.getElementById('monthlyRevenueChart').getContext('2d');
+				new Chart(ctx, {
+					type: 'bar',
+					data: {
+						labels: @chartLabels,
+						datasets: [{
+							label: 'Przychód (PLN)',
+							data: @chartData,
+							backgroundColor: 'rgba(0, 123, 255, 0.5)',
+							borderColor: 'rgba(0, 123, 255, 1)',
+							borderWidth: 1
+						}]
+					},
+					options: {
+						responsive: true,
+						maintainAspectRatio: false,
+						scales: {
+							y: {
+								beginAtZero: true,
+								ticks: {
+									callback: function (value, index, values) {
+										return value + ' zł';
+									}
+								}
+							}
+						}
+					}
+				});
+
+				const connection = new signalR.HubConnectionBuilder()
+					.withUrl("/dashboardHub")
+					.build();
+
+				connection.on("ReceiveSaleNotification", (machineId, productName) => {
+					showToast(`Nowa sprzedaż (Maszyna ${machineId}): Sprzedano ${productName}!`, 'success');
+				});
+
+				connection.on("ReceiveErrorNotification", (machineId, errorCode) => {
+					showToast(`NOWY BŁĄD (Maszyna ${machineId}): ${errorCode}`, 'error');
+				});
+
+				async function startSignalR() {
+					try {
+						await connection.start();
+						console.log("SignalR Połączony.");
+					} catch (err) {
+						console.error(err);
+						setTimeout(startSignalR, 5000);
+					}
+				};
+
+				function showToast(message, type = 'success') {
+					let toast = document.createElement('div');
+					toast.className = `signalr-toast ${type === 'error' ? 'toast-error' : 'toast-success'}`;
+					toast.innerHTML = message;
+
+					document.body.appendChild(toast);
+
+					setTimeout(() => {
+						toast.classList.add('show');
+					}, 100);
+
+					setTimeout(() => {
+						toast.classList.remove('show');
+						setTimeout(() => {
+							if (document.body.contains(toast)) {
+								document.body.removeChild(toast);
+							}
+						}, 500);
+					}, 5000);
+				}
+
+				startSignalR();
+			});
+		</script>
+	}
