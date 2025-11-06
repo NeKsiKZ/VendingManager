@@ -4,6 +4,7 @@ using VendingManager.Data;
 using Microsoft.AspNetCore.Identity;
 using VendingManager.Filters;
 using VendingManager.Models;
+using VendingManager.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddScoped<ApiKeyAuthFilter>();
 
@@ -87,5 +90,7 @@ app.MapControllerRoute(
     pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+
+app.MapHub<DashboardHub>("/dashboardHub");
 
 app.Run();

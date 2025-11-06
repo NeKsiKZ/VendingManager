@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Reflection.Metadata.Ecma335;
 using VendingManager.Filters;
+using Microsoft.AspNetCore.SignalR;
+using VendingManager.Hubs;
 
 namespace VendingManager.Controllers
 {
@@ -16,10 +18,12 @@ namespace VendingManager.Controllers
     public class MachineApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHubContext<DashboardHub> _hubContext;
 
-        public MachineApiController(ApplicationDbContext context)
+        public MachineApiController(ApplicationDbContext context, IHubContext<DashboardHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         [HttpPost("{id}/heartbeat")]
@@ -89,6 +93,11 @@ namespace VendingManager.Controllers
             {
                 return StatusCode(500, new { message = "Błąd zapisu transakcji do bazy.", error = ex.Message });
             }
+
+            await _hubContext.Clients.All.SendAsync("ReceiveSaleNotification",
+                slot.MachineId,
+                product.Name);
+
             return CreatedAtAction(nameof(RecordSale), new { id = newTransaction.Id }, newTransaction);
         }
 
@@ -112,6 +121,10 @@ namespace VendingManager.Controllers
 
             _context.MachineErrorLogs.Add(errorLog);
             await _context.SaveChangesAsync();
+
+            await _hubContext.Clients.All.SendAsync("ReceiveErrorNotification",
+                id,
+                errorLog.ErrorCode);
 
             return CreatedAtAction(nameof(LogError), new { id = errorLog.Id }, errorLog);
         }
