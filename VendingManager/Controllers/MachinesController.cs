@@ -11,24 +11,23 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace VendingManager.Controllers
 {
-    [Authorize]
-    public class MachineSlotsController : Controller
+    [Authorize(Roles = "Admin")]
+    public class MachinesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public MachineSlotsController(ApplicationDbContext context)
+        public MachinesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: MachineSlots
+        // GET: Machines
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.MachineSlots.Include(m => m.Machine).Include(m => m.Product).OrderBy(m => m.Machine.Name).ThenBy(m => m.Product.Name);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.Machines.ToListAsync());
         }
 
-        // GET: MachineSlots/Details/5
+        // GET: Machines/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,45 +35,39 @@ namespace VendingManager.Controllers
                 return NotFound();
             }
 
-            var machineSlot = await _context.MachineSlots
-                .Include(m => m.Machine)
-                .Include(m => m.Product)
+            var machine = await _context.Machines
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (machineSlot == null)
+            if (machine == null)
             {
                 return NotFound();
             }
 
-            return View(machineSlot);
+            return View(machine);
         }
 
-        // GET: MachineSlots/Create
+        // GET: Machines/Create
         public IActionResult Create()
         {
-            ViewData["MachineId"] = new SelectList(_context.Machines, "Id", "Name");
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name");
             return View();
         }
 
-        // POST: MachineSlots/Create
+        // POST: Machines/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,MachineId,ProductId,Quantity,Capacity")] MachineSlot machineSlot)
+        public async Task<IActionResult> Create([Bind("Id,Name,Location,Status,LastContact,Latitude,Longitude")] Machine machine)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(machineSlot);
+                _context.Add(machine);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MachineId"] = new SelectList(_context.Machines, "Id", "Name", machineSlot.MachineId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name", machineSlot.ProductId);
-            return View(machineSlot);
+            return View(machine);
         }
 
-        // GET: MachineSlots/Edit/5
+        // GET: Machines/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,24 +75,22 @@ namespace VendingManager.Controllers
                 return NotFound();
             }
 
-            var machineSlot = await _context.MachineSlots.FindAsync(id);
-            if (machineSlot == null)
+            var machine = await _context.Machines.FindAsync(id);
+            if (machine == null)
             {
                 return NotFound();
             }
-            ViewData["MachineId"] = new SelectList(_context.Machines, "Id", "Name", machineSlot.MachineId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name", machineSlot.ProductId);
-            return View(machineSlot);
+            return View(machine);
         }
 
-        // POST: MachineSlots/Edit/5
+        // POST: Machines/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MachineId,ProductId,Quantity,Capacity")] MachineSlot machineSlot)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Location,Status,LastContact,Latitude,Longitude")] Machine machine)
         {
-            if (id != machineSlot.Id)
+            if (id != machine.Id)
             {
                 return NotFound();
             }
@@ -108,12 +99,12 @@ namespace VendingManager.Controllers
             {
                 try
                 {
-                    _context.Update(machineSlot);
+                    _context.Update(machine);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MachineSlotExists(machineSlot.Id))
+                    if (!MachineExists(machine.Id))
                     {
                         return NotFound();
                     }
@@ -124,12 +115,10 @@ namespace VendingManager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MachineId"] = new SelectList(_context.Machines, "Id", "Name", machineSlot.MachineId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Name", machineSlot.ProductId);
-            return View(machineSlot);
+            return View(machine);
         }
 
-        // GET: MachineSlots/Delete/5
+        // GET: Machines/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,36 +126,34 @@ namespace VendingManager.Controllers
                 return NotFound();
             }
 
-            var machineSlot = await _context.MachineSlots
-                .Include(m => m.Machine)
-                .Include(m => m.Product)
+            var machine = await _context.Machines
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (machineSlot == null)
+            if (machine == null)
             {
                 return NotFound();
             }
 
-            return View(machineSlot);
+            return View(machine);
         }
 
-        // POST: MachineSlots/Delete/5
+        // POST: Machines/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var machineSlot = await _context.MachineSlots.FindAsync(id);
-            if (machineSlot != null)
+            var machine = await _context.Machines.FindAsync(id);
+            if (machine != null)
             {
-                _context.MachineSlots.Remove(machineSlot);
+                _context.Machines.Remove(machine);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool MachineSlotExists(int id)
+        private bool MachineExists(int id)
         {
-            return _context.MachineSlots.Any(e => e.Id == id);
+            return _context.Machines.Any(e => e.Id == id);
         }
     }
 }
