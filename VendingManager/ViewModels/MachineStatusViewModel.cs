@@ -11,5 +11,6 @@
 		public double Longitude { get; set; }
 		public int FillPercentage { get; set; }
         public bool IsStockLow { get; set; }
+        public string MarkerColor { get; set; } = "green";
     }
 }

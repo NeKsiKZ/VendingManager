@@ -196,7 +196,8 @@
 				name = m.Name,
 				location = m.Location,
 				lat = m.Latitude,
-				lon = m.Longitude
+				lon = m.Longitude,
+				markerColor = m.MarkerColor
 			}).ToList();
 			var machinesJson = Html.Raw(Json.Serialize(mapData));
 
@@ -206,6 +207,21 @@
 
 		<script>
 			document.addEventListener("DOMContentLoaded", function () {
+
+				var baseIcon = L.Icon.extend({
+					options: {
+						shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+						iconSize: [25, 41],
+						iconAnchor: [12, 41],
+						popupAnchor: [1, -34],
+						shadowSize: [41, 41]
+					}
+				});
+
+				var greenIcon = new baseIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png' });
+				var redIcon = new baseIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png' });
+				var orangeIcon = new baseIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png' });
+				var greyIcon = new baseIcon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png' });
 
 				var map = L.map('dashboardMap').setView([53.1325, 23.1688], 13);
 
@@ -217,7 +233,23 @@
 
 				machines.forEach(function (machine) {
 					if (machine.lat !== 0 && machine.lon !== 0) {
-						L.marker([machine.lat, machine.lon])
+
+						let currentIcon;
+						switch (machine.markerColor) {
+							case "red":
+								currentIcon = redIcon;
+								break;
+							case "orange":
+								currentIcon = orangeIcon;
+								break;
+							case "grey":
+								currentIcon = greyIcon;
+								break;
+							default:
+								currentIcon = greenIcon;
+						}
+
+						L.marker([machine.lat, machine.lon], { icon: currentIcon })
 							.addTo(map)
 							.bindPopup(`<strong>${machine.name}</strong><br>${machine.location}`);
 					}

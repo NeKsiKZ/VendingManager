@@ -70,19 +70,42 @@ namespace VendingManager.Controllers
                 int totalCapacity = machine.Slots.Sum(s => s.Capacity);
                 int fillPercentage = (totalCapacity > 0) ? (int)Math.Round(((double)totalQuantity / totalCapacity) * 100) : 100;
 
-                machineStatusList.Add(new MachineStatusViewModel
+                const int STOCK_WARNING_THRESHOLD = 50;
+
+                string markerColor;
+                if (machine.Status == "Offline")
                 {
-					Id = machine.Id,
-					Name = machine.Name,
-					Location = machine.Location,
-					Status = machine.Status,
-					LastContact = machine.LastContact,
-					FillPercentage = fillPercentage,
-					IsStockLow = fillPercentage < STOCK_LOW_THRESHOLD,
-					Latitude = machine.Latitude,
-					Longitude = machine.Longitude
-				});
-            }
+                    markerColor = "grey";
+                }
+                else if (fillPercentage < STOCK_LOW_THRESHOLD)
+                {
+                    markerColor = "red";
+                }
+                else if (fillPercentage < STOCK_WARNING_THRESHOLD)
+                {
+                    markerColor = "orange";
+                }
+                else
+                {
+                    markerColor = "green";
+                }
+
+                var machineStatus = new MachineStatusViewModel
+                {
+                    Id = machine.Id,
+                    Name = machine.Name,
+                    Location = machine.Location,
+                    Status = machine.Status,
+                    LastContact = machine.LastContact,
+                    FillPercentage = fillPercentage,
+                    IsStockLow = fillPercentage < STOCK_LOW_THRESHOLD,
+                    Latitude = machine.Latitude,
+                    Longitude = machine.Longitude,
+                    MarkerColor = markerColor
+                };
+
+				machineStatusList.Add(machineStatus);
+			}
 
             var viewModel = new DashboardViewModel
             {
