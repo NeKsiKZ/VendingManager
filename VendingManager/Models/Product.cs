@@ -20,5 +20,8 @@ namespace VendingManager.Models
         [Display(Name = "Cena")]
         [Column(TypeName = "decimal(18, 2)")]
         public decimal Price { get; set; }
+
+        [Display(Name = "Zdjęcie")]
+        public string? ImageUrl { get; set; }
     }
 }

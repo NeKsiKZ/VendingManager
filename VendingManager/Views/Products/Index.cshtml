@@ -9,9 +9,10 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table table-striped align-middle">
     <thead>
         <tr>
+            <th>Zdjęcie</th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
@@ -27,6 +28,18 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @if (item.ImageUrl != null)
+                {
+                    <img src="@item.ImageUrl" alt="@item.Name" style="width: 70px; height: 70px; object-fit: cover; border-radius: 5px;" />
+                }
+                else
+                {
+                    <div style="width: 70px; height: 70px; background-color: #eee; border-radius: 5px; display: flex; align-items: center; justify-content: center;">
+                        <span class="text-muted" style="font-size: 0.8em;">Brak</span>
+                    </div>
+                }
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>

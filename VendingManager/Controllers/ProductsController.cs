@@ -15,11 +15,13 @@ namespace VendingManager.Controllers
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+		private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductsController(ApplicationDbContext context)
+		public ProductsController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
-        }
+			_webHostEnvironment = webHostEnvironment;
+		}
 
         // GET: Products
         public async Task<IActionResult> Index()
@@ -56,11 +58,17 @@ namespace VendingManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Price")] Product product, IFormFile? imageFile)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+				string? imageUrl = await SaveImage(imageFile);
+				if (imageUrl != null)
+				{
+					product.ImageUrl = imageUrl;
+				}
+
+				_context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -88,7 +96,7 @@ namespace VendingManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price")] Product product, IFormFile? imageFile)
         {
             if (id != product.Id)
             {
@@ -99,9 +107,25 @@ namespace VendingManager.Controllers
             {
                 try
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
+					var productToUpdate = await _context.Products.FindAsync(id);
+					if (productToUpdate == null)
+					{
+						return NotFound();
+					}
+
+					productToUpdate.Name = product.Name;
+					productToUpdate.Description = product.Description;
+					productToUpdate.Price = product.Price;
+
+					if (imageFile != null)
+					{
+
+						DeleteImage(productToUpdate.ImageUrl);
+						productToUpdate.ImageUrl = await SaveImage(imageFile);
+					}
+
+					await _context.SaveChangesAsync();
+				}
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ProductExists(product.Id))
@@ -144,7 +168,8 @@ namespace VendingManager.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
-                _context.Products.Remove(product);
+				DeleteImage(product.ImageUrl);
+				_context.Products.Remove(product);
             }
 
             await _context.SaveChangesAsync();
@@ -155,5 +180,44 @@ namespace VendingManager.Controllers
         {
             return _context.Products.Any(e => e.Id == id);
         }
-    }
+
+		private async Task<string?> SaveImage(IFormFile? imageFile)
+		{
+			if (imageFile == null || imageFile.Length == 0)
+			{
+				return null;
+			}
+
+			string wwwRootPath = _webHostEnvironment.WebRootPath;
+			string uploadPath = Path.Combine(wwwRootPath, "images", "products");
+
+			if (!Directory.Exists(uploadPath))
+			{
+				Directory.CreateDirectory(uploadPath);
+			}
+
+			string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+			string filePath = Path.Combine(uploadPath, fileName);
+
+			using (var fileStream = new FileStream(filePath, FileMode.Create))
+			{
+				await imageFile.CopyToAsync(fileStream);
+			}
+
+			return "/images/products/" + fileName;
+		}
+
+		private void DeleteImage(string? imageUrl)
+		{
+			if (string.IsNullOrEmpty(imageUrl)) return;
+
+			string wwwRootPath = _webHostEnvironment.WebRootPath;
+			string filePath = Path.Combine(wwwRootPath, imageUrl.TrimStart('/'));
+
+			if (System.IO.File.Exists(filePath))
+			{
+				System.IO.File.Delete(filePath);
+			}
+		}
+	}
 }
