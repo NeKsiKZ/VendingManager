@@ -1,53 +1,83 @@
 ﻿@model IEnumerable<VendingManager.Models.MachineSlot>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Asortyment w Automatach";
 }
 
-<h1>Asortyment</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Dodaj nowy asortyment</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Machine)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Capacity)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Machine.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Capacity)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+
+@{
+    var groupedSlots = Model.GroupBy(s => s.Machine);
 }
-    </tbody>
-</table>
+
+@if (groupedSlots.Any())
+{
+    <div class="accordion" id="machinesAccordion">
+
+        @foreach (var machineGroup in groupedSlots)
+        {
+            var machine = machineGroup.Key;
+            var slots = machineGroup.ToList();
+
+            <div class="accordion-item">
+
+                <h2 class="accordion-header" id="heading-@machine.Id">
+
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@machine.Id" aria-expanded="false" aria-controls="collapse-@machine.Id">
+
+                        <div class="d-flex justify-content-between w-100 align-items-center">
+
+                            <div class="text-truncate">
+                                <strong>@machine.Name</strong>
+                                <span class="text-muted ms-2 fst-italic">(@machine.Location)</span>
+                            </div>
+
+                            <span class="badge bg-info me-3">Liczba produktów: @slots.Count</span>
+
+                        </div>
+                    </button>
+                </h2>
+
+                <div id="collapse-@machine.Id" class="accordion-collapse collapse" aria-labelledby="heading-@machine.Id" data-bs-parent="#machinesAccordion">
+                    <div class="accordion-body">
+
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Produkt</th>
+                                    <th>Aktualny Stan</th>
+                                    <th>Pojemność</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var slot in slots.OrderBy(s => s.Product.Name))
+                                {
+                                    <tr>
+                                        <td>@slot.Product.Name</td>
+                                        <td>@slot.Quantity</td>
+                                        <td>@slot.Capacity</td>
+                                        <td class="text-end">
+                                            <a asp-action="Edit" asp-route-id="@slot.Id" class="btn btn-sm btn-outline-primary">Edytuj</a>
+                                            <a asp-action="Details" asp-route-id="@slot.Id" class="btn btn-sm btn-outline-info">Szczegóły</a>
+                                            <a asp-action="Delete" asp-route-id="@slot.Id" class="btn btn-sm btn-outline-danger">Usuń</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p class="text-muted">Brak zdefiniowanego asortymentu. Kliknij "Dodaj nowy asortyment", aby przypisać produkty do automatów.</p>
+}
