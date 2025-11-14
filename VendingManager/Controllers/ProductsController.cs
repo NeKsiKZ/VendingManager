@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using VendingManager.Data;
 using VendingManager.Models;
 using Microsoft.AspNetCore.Authorization;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 
 namespace VendingManager.Controllers
 {
@@ -15,13 +17,12 @@ namespace VendingManager.Controllers
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
-		private readonly IWebHostEnvironment _webHostEnvironment;
-
-		public ProductsController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        private readonly IConfiguration _configuration;
+        public ProductsController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
-			_webHostEnvironment = webHostEnvironment;
-		}
+            _configuration = configuration;
+        }
 
         // GET: Products
         public async Task<IActionResult> Index()
@@ -181,43 +182,56 @@ namespace VendingManager.Controllers
             return _context.Products.Any(e => e.Id == id);
         }
 
-		private async Task<string?> SaveImage(IFormFile? imageFile)
-		{
-			if (imageFile == null || imageFile.Length == 0)
-			{
-				return null;
-			}
+        private async Task<string?> SaveImage(IFormFile? imageFile)
+        {
+            if (imageFile == null || imageFile.Length == 0)
+            {
+                return null;
+            }
 
-			string wwwRootPath = _webHostEnvironment.WebRootPath;
-			string uploadPath = Path.Combine(wwwRootPath, "images", "products");
+            string connectionString = _configuration.GetConnectionString("BlobStorage")!;
 
-			if (!Directory.Exists(uploadPath))
-			{
-				Directory.CreateDirectory(uploadPath);
-			}
+            string containerName = "product-images";
 
-			string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
-			string filePath = Path.Combine(uploadPath, fileName);
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
-			using (var fileStream = new FileStream(filePath, FileMode.Create))
-			{
-				await imageFile.CopyToAsync(fileStream);
-			}
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob);
 
-			return "/images/products/" + fileName;
-		}
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
 
-		private void DeleteImage(string? imageUrl)
-		{
-			if (string.IsNullOrEmpty(imageUrl)) return;
+            BlobClient blobClient = containerClient.GetBlobClient(fileName);
 
-			string wwwRootPath = _webHostEnvironment.WebRootPath;
-			string filePath = Path.Combine(wwwRootPath, imageUrl.TrimStart('/'));
+            using (var stream = imageFile.OpenReadStream())
+            {
+                await blobClient.UploadAsync(stream, new BlobHttpHeaders { ContentType = imageFile.ContentType });
+            }
 
-			if (System.IO.File.Exists(filePath))
-			{
-				System.IO.File.Delete(filePath);
-			}
-		}
-	}
+            return blobClient.Uri.ToString();
+        }
+
+        private async Task DeleteImage(string? imageUrl)
+        {
+            if (string.IsNullOrEmpty(imageUrl)) return;
+
+            string connectionString = _configuration.GetConnectionString("BlobStorage")!;
+            string containerName = "product-images";
+
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            try
+            {
+                var uri = new Uri(imageUrl);
+                string fileName = Path.GetFileName(uri.LocalPath);
+
+                BlobClient blobClient = containerClient.GetBlobClient(fileName);
+                await blobClient.DeleteIfExistsAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Błąd podczas usuwania bloba: {ex.Message}");
+            }
+        }
+    }
 }
