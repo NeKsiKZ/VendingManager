@@ -1,49 +1,61 @@
 ﻿@model IEnumerable<VendingManager.Models.MachineErrorLog>
 
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dziennik Błędów";
 }
 
-<h1>Dziennik Błędów</h1>
+<div class="row">
+    <div class="col-md-10 mx-auto">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Machine.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Timestamp)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ErrorCode)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Message)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Machine.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Timestamp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ErrorCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Message)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <div class="text-center mb-4">
+            <h1 class="display-4">@ViewData["Title"]</h1>
+            <p class="lead text-muted">Rejestr błędów zgłoszonych przez automaty.</p>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h4 class="mb-0">Zgłoszone Błędy</h4>
+            </div>
+
+            <ul class="list-group list-group-flush">
+
+                <li class="list-group-item d-none d-md-flex">
+                    <div class="fw-bold col-3">Automat</div>
+                    <div class="fw-bold col-3">Data i Godzina</div>
+                    <div class="fw-bold col-4">Opis Błędu</div>
+                    <div class="fw-bold col-2 text-end">Akcje</div>
+                </li>
+
+                @if (Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center">
+
+                            <div class="col-12 col-md-3 mb-2 mb-md-0">
+                                <strong>@Html.DisplayFor(modelItem => item.Machine.Name)</strong>
+                            </div>
+
+                            <div class="col-12 col-md-3 mb-2 mb-md-0">
+                                @Html.DisplayFor(modelItem => item.Timestamp)
+                            </div>
+
+                            <div class="col-12 col-md-4 mb-2 mb-md-0">
+                                <span class="badge bg-danger me-2">@Html.DisplayFor(modelItem => item.ErrorCode)</span>
+                                <span class="text-muted">@Html.DisplayFor(modelItem => item.Message)</span>
+                            </div>
+
+                            <div class="col-12 col-md-2 text-md-end">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Szczegóły</a>
+                            </div>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li class="list-group-item text-center text-success">Brak zgłoszonych błędów.</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>

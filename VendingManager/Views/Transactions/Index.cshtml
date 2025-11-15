@@ -1,48 +1,66 @@
 ﻿@model IEnumerable<VendingManager.Models.Transaction>
+@using System.Globalization
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Historia Transakcji";
 }
 
-<h1>Historia Transakcji</h1>
+<div class="row">
+    <div class="col-md-10 mx-auto">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Automat
-            </th>
-            <th>
-                Produkt
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TransactionDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SalePrice)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Machine.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TransactionDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SalePrice)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        <div class="text-center mb-4">
+            <h1 class="display-4">@ViewData["Title"]</h1>
+            <p class="lead text-muted">Dziennik wszystkich transakcji sprzedaży z automatów.</p>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h4 class="mb-0">Rejestr Sprzedaży</h4>
+            </div>
+
+            <ul class="list-group list-group-flush">
+
+                <li class="list-group-item d-none d-md-flex">
+                    <div class="fw-bold col-3">Produkt</div>
+                    <div class="fw-bold col-3">Automat</div>
+                    <div class="fw-bold col-3">Data i Godzina</div>
+                    <div class="fw-bold col-2">Cena</div>
+                    <div class="fw-bold col-1 text-end">Akcje</div>
+                </li>
+
+                @if (Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center">
+
+                            <div class="col-12 col-md-3 mb-2 mb-md-0">
+                                <strong>@Html.DisplayFor(modelItem => item.Product.Name)</strong>
+                            </div>
+
+                            <div class="col-12 col-md-3 mb-2 mb-md-0">
+                                <span class="text-muted fst-italic">@Html.DisplayFor(modelItem => item.Machine.Name)</span>
+                            </div>
+
+                            <div class="col-12 col-md-3 mb-2 mb-md-0">
+                                @Html.DisplayFor(modelItem => item.TransactionDate)
+                            </div>
+
+                            <div class="col-12 col-md-2 mb-2 mb-md-0">
+                                @item.SalePrice.ToString("C", new CultureInfo("pl-PL"))
+                            </div>
+
+                            <div class="col-12 col-md-1 text-md-end">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Szczegóły</a>
+                            </div>
+                        </li>
+                    }
+                }
+                else
+                {
+                    <li class="list-group-item text-center text-muted">Brak zarejestrowanych transakcji.</li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
