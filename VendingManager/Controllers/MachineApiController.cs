@@ -135,6 +135,29 @@ namespace VendingManager.Controllers
         {
             return await _context.Machines.ToListAsync();
         }
+
+        // GET: /api/machine/{id}/inventory
+        [HttpGet("{id}/inventory")]
+        public async Task<ActionResult<IEnumerable<MachineInventoryDto>>> GetInventory(int id)
+        {
+            var machine = await _context.Machines.FindAsync(id);
+            if (machine == null) return NotFound();
+
+            var inventory = await _context.MachineSlots
+                .Where(s => s.MachineId == id)
+                .Include(s => s.Product)
+                .Select(s => new MachineInventoryDto
+                {
+                    ProductId = s.Product.Id,
+                    ProductName = s.Product.Name,
+                    Price = s.Product.Price,
+                    Quantity = s.Quantity,
+                    ImageUrl = s.Product.ImageUrl
+                })
+                .ToListAsync();
+
+            return Ok(inventory);
+        }
+
     }
 }
-
