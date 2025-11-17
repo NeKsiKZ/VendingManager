@@ -128,6 +128,13 @@ namespace VendingManager.Controllers
 
             return CreatedAtAction(nameof(LogError), new { id = errorLog.Id }, errorLog);
         }
+
+        // GET: /api/machine
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Machine>>> GetAll()
+        {
+            return await _context.Machines.ToListAsync();
+        }
     }
 }
 
