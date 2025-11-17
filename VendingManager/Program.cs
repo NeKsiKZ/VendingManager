@@ -10,6 +10,17 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 string? storageConnectionString = builder.Configuration.GetConnectionString("DataProtectionStorage");
 
 if (!string.IsNullOrEmpty(storageConnectionString))
@@ -136,6 +147,8 @@ if (Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") != "true")
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("AllowReactFrontend");
 
 app.UseAuthentication();
 
