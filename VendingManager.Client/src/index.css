@@ -1,0 +1,7 @@
+.leaflet-pane img, 
+.leaflet-tile, 
+.leaflet-marker-icon, 
+.leaflet-marker-shadow {
+    max-width: none !important;
+    max-height: none !important;
+}
