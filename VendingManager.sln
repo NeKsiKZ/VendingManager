@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendingManager", "VendingMa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VendingManager.Tests", "VendingManager.Tests\VendingManager.Tests.csproj", "{7A208DBA-3602-4C2E-BA87-A34C8BCC3A01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VendingManager.E2ETests", "VendingManager.E2ETests\VendingManager.E2ETests.csproj", "{3DDC7BD4-4610-4BDA-A882-45BB9B6C5344}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7A208DBA-3602-4C2E-BA87-A34C8BCC3A01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A208DBA-3602-4C2E-BA87-A34C8BCC3A01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A208DBA-3602-4C2E-BA87-A34C8BCC3A01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DDC7BD4-4610-4BDA-A882-45BB9B6C5344}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DDC7BD4-4610-4BDA-A882-45BB9B6C5344}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DDC7BD4-4610-4BDA-A882-45BB9B6C5344}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DDC7BD4-4610-4BDA-A882-45BB9B6C5344}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
