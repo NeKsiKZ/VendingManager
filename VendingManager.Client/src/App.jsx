@@ -28,6 +28,8 @@ export default function AppWrapper() {
 
 function App() {
   const [machines, setMachines] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
   const [selectedMachine, setSelectedMachine] = useState(null);
   const [products, setProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(false);
@@ -40,9 +42,12 @@ function App() {
   useEffect(() => { fetchMachines(); }, []);
 
   const fetchMachines = () => {
-    fetch(API_URL, { headers: { 'X-API-KEY': API_KEY } })
+    fetch(`${API_URL}?pageSize=100`, { headers: { 'X-API-KEY': API_KEY } })
     .then(res => res.json())
-    .then(data => setMachines(data))
+    .then(data => {
+        const machinesList = data.items || data;
+        setMachines(machinesList);
+    })
     .catch(err => console.error(err));
   };
 
@@ -85,6 +90,17 @@ function App() {
     setTimeout(() => setNotification(null), 3000);
   };
 
+    const filteredMachines = machines.filter(machine => {
+    const matchesSearch = 
+        machine.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        machine.location.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus = 
+        statusFilter === "All" || machine.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+
   return (
     <div className="container py-5 position-relative">
       
@@ -117,22 +133,49 @@ function App() {
         <p className="lead text-muted">Wybierz automat i dodaj produkty do koszyka</p>
       </div>
 
+      {/* PASEK FILTRÓW */}
+      <div className="row justify-content-center mb-4">
+        <div className="col-md-8">
+            <div className="card shadow-sm p-3 border-0">
+                <div className="row g-3">
+                    <div className="col-md-8">
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            placeholder="Szukaj automatu (nazwa, lokalizacja)..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <select 
+                            className="form-select" 
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                        >
+                            <option value="All">Wszystkie statusy</option>
+                            <option value="Online">Tylko Online</option>
+                            <option value="Offline">Tylko Offline</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
       <div className="card shadow-sm border-0 mb-5 overflow-hidden">
         <div className="card-body p-0">
           <MapContainer center={[53.1325, 23.1688]} zoom={13} style={{ height: '400px', width: '100%', zIndex: 0 }}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {machines.map(m => {
+            
+            {filteredMachines.map(m => {
                const lat = m.latitude || m.Latitude;
                const lon = m.longitude || m.Longitude;
-            
+               
                if (!lat || !lon) return null;
-            
+
                return (
-                <Marker 
-                  key={m.id} 
-                  position={[lat, lon]} 
-                  icon={getIcon(m.status === 'Online' ? 'green' : 'red')}
-                >
+                <Marker key={m.id} position={[lat, lon]} icon={getIcon(m.status === 'Online' ? 'green' : 'red')}>
                   <Popup>
                     <strong>{m.name}</strong><br/>
                     <button className="btn btn-sm btn-primary mt-2" onClick={() => openMachineModal(m)}>Sklep</button>
@@ -145,20 +188,26 @@ function App() {
       </div>
 
       <div className="row g-4">
-        {machines.map(machine => (
-          <div key={machine.id} className="col-md-6 col-lg-4">
-            <div className="card h-100 shadow-sm border-0">
-              <div className="card-body">
-                <h5 className="card-title fw-bold">{machine.name}</h5>
-                <span className={`badge ${machine.status === 'Online' ? 'bg-success' : 'bg-danger'} mb-2`}>{machine.status}</span>
-                <p className="text-muted small">{machine.location}</p>
-              </div>
-              <div className="card-footer bg-transparent border-top-0">
-                <button className="btn btn-outline-primary w-100" onClick={() => openMachineModal(machine)}>Zobacz asortyment</button>
-              </div>
+        {filteredMachines.length > 0 ? (
+            filteredMachines.map(machine => (
+            <div key={machine.id} className="col-md-6 col-lg-4">
+                <div className="card h-100 shadow-sm border-0">
+                <div className="card-body">
+                    <h5 className="card-title fw-bold">{machine.name}</h5>
+                    <span className={`badge ${machine.status === 'Online' ? 'bg-success' : 'bg-danger'} mb-2`}>{machine.status}</span>
+                    <p className="text-muted small">{machine.location}</p>
+                </div>
+                <div className="card-footer bg-transparent border-top-0">
+                    <button className="btn btn-outline-primary w-100" onClick={() => openMachineModal(machine)}>Zobacz asortyment</button>
+                </div>
+                </div>
             </div>
-          </div>
-        ))}
+            ))
+        ) : (
+            <div className="text-center text-muted py-5">
+                <h4>Nie znaleziono automatów pasujących do filtrów</h4>
+            </div>
+        )}
       </div>
 
       {/* MODAL - Zmodyfikowany przycisk */}
