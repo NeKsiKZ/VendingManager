@@ -94,6 +94,8 @@ function App() {
         style={{width: '60px', height: '60px', zIndex: 1030}}
         onClick={() => setIsCartOpen(true)}
       >
+        <span className="fs-4">🛒</span>
+
         {cartCount > 0 && (
             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                 {cartCount}
