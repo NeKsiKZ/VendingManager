@@ -129,15 +129,54 @@ namespace VendingManager.Controllers
             return CreatedAtAction(nameof(LogError), new { id = errorLog.Id }, errorLog);
         }
 
-        // GET: /api/machine
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Machine>>> GetAll()
-        {
-            return await _context.Machines.ToListAsync();
-        }
+		// GET: /api/machine
+		[HttpGet]
+		public async Task<ActionResult<PagedResult<Machine>>> GetAll([FromQuery] PaginationQuery query)
+		{
+			var baseQuery = _context.Machines.AsQueryable();
 
-        // GET: /api/machine/{id}/inventory
-        [HttpGet("{id}/inventory")]
+			if (!string.IsNullOrEmpty(query.SearchPhrase))
+			{
+				baseQuery = baseQuery.Where(r =>
+					r.Name.Contains(query.SearchPhrase) ||
+					r.Location.Contains(query.SearchPhrase));
+			}
+
+			if (string.IsNullOrEmpty(query.SortBy))
+			{
+				baseQuery = baseQuery.OrderBy(r => r.Name);
+			}
+			else
+			{
+				baseQuery = query.IsDescending
+					? query.SortBy.ToLower() switch
+					{
+						"location" => baseQuery.OrderByDescending(r => r.Location),
+						"status" => baseQuery.OrderByDescending(r => r.Status),
+						_ => baseQuery.OrderByDescending(r => r.Name)
+					}
+					: query.SortBy.ToLower() switch
+					{
+						"location" => baseQuery.OrderBy(r => r.Location),
+						"status" => baseQuery.OrderBy(r => r.Status),
+						_ => baseQuery.OrderBy(r => r.Name)
+					};
+			}
+
+			var totalItemsCount = await baseQuery.CountAsync();
+
+			var machines = await baseQuery
+				.Skip(query.PageSize * (query.PageNumber - 1))
+				.Take(query.PageSize)
+				.ToListAsync();
+
+			var result = new PagedResult<Machine>(machines, totalItemsCount, query.PageSize, query.PageNumber);
+
+			return Ok(result);
+		}
+
+		// GET: /api/machine/{id}/inventory
+		[HttpGet("{id}/inventory")]
         public async Task<ActionResult<IEnumerable<MachineInventoryDto>>> GetInventory(int id)
         {
             var machine = await _context.Machines.FindAsync(id);
