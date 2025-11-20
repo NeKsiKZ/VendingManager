@@ -12,13 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactFrontend",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+	options.AddPolicy("AllowReactFrontend",
+		policy =>
+		{
+			policy.AllowAnyOrigin()
+				  .AllowAnyHeader()
+				  .AllowAnyMethod();
+		});
 });
 
 string? storageConnectionString = builder.Configuration.GetConnectionString("DataProtectionStorage");
