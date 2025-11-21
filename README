@@ -1,2 +1,172 @@
-Backend: https://vendingmanager-app-bz123.purpleflower-915564b1.polandcentral.azurecontainerapps.io
-Frontend: https://vending-manager-client-3zg5pn9sj-neksikzs-projects.vercel.app/
+🚀 VendingManager: IoT Vending Machine Management System
+
+VendingManager is a comprehensive Full-Stack system simulating the management of a network of intelligent vending machines (IoT). The project demonstrates a modern, distributed architecture combining a server-side rendered administrative panel (MVC), a public client application (SPA), and real-time communication.
+
+The application is fully containerized using Docker & Docker Compose and deployed on Microsoft Azure cloud.
+
+🌐 Live Demo
+
+The application is fully deployed and available online:
+
+🔐 1. Admin Panel (Backend & MVC)
+
+Fleet management, sales analytics, logistics.
+
+Link: https://vendingmanager-app-bz123.purpleflower-915564b1.polandcentral.azurecontainerapps.io/
+
+Credentials:
+
+Email: admin@vending.com
+
+Password: Admin123!
+
+🛒 2. Client App (React Frontend)
+
+Public interface for customers with an interactive map and virtual store.
+
+Link: https://vending-manager-client-3zg5pn9sj-neksikzs-projects.vercel.app/
+
+📖 3. API Documentation (Swagger)
+
+Link: https://vendingmanager-app-bz123.purpleflower-915564b1.polandcentral.azurecontainerapps.io/swagger
+
+🏗️ Architecture & Tech Stack
+
+The project was built with a focus on clean code, security, and scalability.
+
+Backend (.NET 8)
+
+Architecture: Hybrid (MVC for Admin Panel + REST API for devices/frontend).
+
+Database: SQL Server (Azure SQL Database) using Entity Framework Core.
+
+Real-Time: SignalR for live sales notifications and error reporting.
+
+Security:
+
+ASP.NET Core Identity (Roles: Admin, Operator).
+
+API Key Authorization Filters (X-API-KEY) for M2M communication.
+
+CORS policy for React client.
+
+Storage: Azure Blob Storage for storing product images and Data Protection Keys.
+
+Frontend (React + Vite)
+
+UI: Responsive design based on Bootstrap 5.
+
+Maps: Integration with Leaflet.js and React-Leaflet for fleet visualization.
+
+State Management: Context API (shopping cart handling).
+
+Communication: fetch API for consuming .NET backend.
+
+DevOps & QA
+
+Containerization: Full Docker and Docker Compose support (Multi-container setup).
+
+Cloud: Deployed to Azure Container Apps (Backend) and Vercel (Frontend).
+
+CI/CD: Automated GitHub Actions pipelines (Build & Test).
+
+Testing:
+
+xUnit: Unit tests for controllers and business logic.
+
+Playwright: End-to-End (E2E) tests verifying frontend behavior.
+
+✨ Key Features
+
+1. Analytics Dashboard (Business Intelligence)
+
+Real-time transaction data aggregation.
+
+Dynamic sales charts (Chart.js) with date range filtering (Backend-side filtering).
+
+Interactive map with markers changing color based on machine status (Online/Offline) and stock levels.
+
+2. Shopping Simulator (Live)
+
+User purchases a product in the React app.
+
+Backend processes the transaction and updates the stock in SQL Server.
+
+SignalR instantly pushes a "Toast" notification to the logged-in Administrator without refreshing the page.
+
+3. Smart Logistics
+
+The "Restocking" module automatically analyzes stock levels across all machines and generates:
+
+A consolidated shopping list (what to pick from the warehouse).
+
+A route list of machines requiring maintenance.
+
+4. Error Management
+
+The API accepts technical error reports from machines (e.g., "Coin Jam"), which are logged and presented to the administrator.
+
+🚀 Local Setup (Docker)
+
+The easiest way to run the entire system (App + DB) on your local machine. Requires Docker Desktop.
+
+Clone the repository:
+
+git clone https://github.com/NeKsiKZ/VendingManager.git
+cd VendingManager
+
+
+Configure Environment Variables:
+Create a .env file in the root solution directory and add a strong DB password:
+
+SA_PASSWORD=YourStrongPassword123!
+
+
+(Optional) Create .env.local in VendingManager.Client for API Key configuration.
+
+Run Containers:
+
+docker-compose up --build
+
+
+Ready! The application will automatically run database migrations and seed the database with test data.
+
+Store (React): http://localhost:8080 (or http://localhost:5173 via npm run dev)
+
+Admin Panel: http://localhost:8080
+
+Swagger API: http://localhost:8080/swagger
+
+🧪 Testing
+
+The project maintains high test coverage to ensure stability.
+
+Backend Unit Tests
+
+dotnet test
+
+
+Tests: API logic, Dashboard statistics calculation, restocking list generation.
+
+Frontend E2E Tests
+
+Tests written in Playwright simulate user behavior in the browser.
+(Requires running application).
+
+// Example E2E Test Scenario (Playwright)
+[Test]
+public async Task Homepage_Should_Load_And_Show_Machines() {
+    await Page.GotoAsync(AppUrl);
+    // Wait for the second card to appear (ensuring data is fetched)
+    await Expect(Page.Locator(".card").Nth(1)).ToBeVisibleAsync();
+    // ...
+}
+
+
+👤 Author
+
+Bartosz Zimnoch
+
+LinkedIn: www.linkedin.com/in/bartosz-zimnoch-342113255
+
+GitHub: github.com/NeKsiKZ
