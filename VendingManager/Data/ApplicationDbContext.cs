@@ -1,103 +1,169 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using VendingManager.Models;
 using Microsoft.EntityFrameworkCore;
-
+using System;
+using System.Collections.Generic;
+using VendingManager.Models;
 
 namespace VendingManager.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<AppUser>
-    {
-        public DbSet<Machine> Machines { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<MachineSlot> MachineSlots { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
-        public DbSet<MachineErrorLog> MachineErrorLogs { get; set; }
+	public class ApplicationDbContext : IdentityDbContext<AppUser>
+	{
+		public DbSet<Machine> Machines { get; set; }
+		public DbSet<Product> Products { get; set; }
+		public DbSet<MachineSlot> MachineSlots { get; set; }
+		public DbSet<Transaction> Transactions { get; set; }
+		public DbSet<MachineErrorLog> MachineErrorLogs { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			base.OnModelCreating(modelBuilder);
 
-            var seedDate = new DateTime(2025, 10, 20, 12, 0, 0);
+			var seedDate = new DateTime(2025, 11, 20, 12, 0, 0);
 
-            modelBuilder.Entity<Machine>().HasData(
-                new Machine
-                {
-                    Id = 1,
-                    Name = "Automat GŁÓWNY",
-                    Location = "Hol wejściowy, Budynek A",
-                    Status = "Online",
-                    LastContact = seedDate.AddMinutes(-5),
-                    Latitude = 53.117015,
-                    Longitude = 23.146449
+			modelBuilder.Entity<Machine>().HasData(
+				new Machine
+				{
+					Id = 1,
+					Name = "Automat POLITECHNIKA",
+					Location = "Hol wejściowy, Budynek A",
+					Status = "Online",
+					LastContact = seedDate.AddMinutes(-5),
+					Latitude = 53.1169,
+					Longitude = 23.1465
 				},
-                new Machine
-                {
-                    Id = 2,
-                    Name = "Automat PIĘTRO 2",
-                    Location = "Korytarz przy windach",
-                    Status = "Offline",
-                    LastContact = seedDate.AddHours(-8),
-                    Latitude = 53.133826,
-					Longitude = 23.134977
+				new Machine
+				{
+					Id = 2,
+					Name = "Automat OPERA",
+					Location = "Opera, Główne wejście",
+					Status = "Online",
+					LastContact = seedDate.AddMinutes(-15),
+					Latitude = 53.1300,
+					Longitude = 23.1502
+				},
+				new Machine
+				{
+					Id = 3,
+					Name = "Automat DWORZEC PKP",
+					Location = "Wejście od strony parkingu",
+					Status = "Offline",
+					LastContact = seedDate.AddHours(-48),
+					Latitude = 53.1322,
+					Longitude = 23.1356
+				},
+				new Machine
+				{
+					Id = 4,
+					Name = "Automat GALERIA ALFA",
+					Location = "Poziom +1, Food Court",
+					Status = "Online",
+					LastContact = seedDate.AddMinutes(-2),
+					Latitude = 53.1245,
+					Longitude = 23.1679
+				},
+				new Machine
+				{
+					Id = 5,
+					Name = "Automat GALERIA JUROWIECKA",
+					Location = "Galeria, Główne wejście",
+					Status = "Online",
+					LastContact = seedDate.AddMinutes(-10),
+					Latitude = 53.1362,
+					Longitude = 23.1633
+				},
+				new Machine
+				{
+					Id = 6,
+					Name = "Automat GALERIA BIAŁA",
+					Location = "Przy sklepie rossmann",
+					Status = "Online",
+					LastContact = seedDate.AddMinutes(-30),
+					Latitude = 53.1233,
+					Longitude = 23.1790
 				}
-            );
+			);
 
-            modelBuilder.Entity<Product>().HasData(
-            new Product { Id = 2, Name = "Fanta (Test)", Description = "Seed Data", Price = 3.00m },
-            new Product { Id = 3, Name = "Cola (Test)", Description = "Seed Data", Price = 3.50m },
-            new Product { Id = 4, Name = "Woda (Test)", Description = "Seed Data", Price = 3m },
-            new Product { Id = 10, Name = "Monster (Test)", Description = "Seed Data", Price = 7m }
-);
+			modelBuilder.Entity<Product>().HasData(
+				new Product { Id = 1, Name = "Cola 0.5L", Description = "Napój gazowany", Price = 4.50m },
+				new Product { Id = 2, Name = "Fanta 0.5L", Description = "Napój gazowany", Price = 4.50m },
+				new Product { Id = 3, Name = "Woda Niegazowana", Description = "Źródlana", Price = 2.50m },
+				new Product { Id = 4, Name = "Monster Energy", Description = "Napój energetyczny", Price = 7.00m },
+				new Product { Id = 5, Name = "Baton Czekoladowy", Description = "Z orzechami", Price = 3.00m },
+				new Product { Id = 6, Name = "Chipsy Solone", Description = "Mała paczka", Price = 3.50m }
+			);
 
-            modelBuilder.Entity<Transaction>().HasData(
-                // --- Transakcje z Października 2025 ---
-                new Transaction { Id = 101, MachineId = 1, ProductId = 3, TransactionDate = new DateTime(2025, 10, 5), SalePrice = 3.50m },
-                new Transaction { Id = 102, MachineId = 2, ProductId = 2, TransactionDate = new DateTime(2025, 10, 10), SalePrice = 3.00m },
-                new Transaction { Id = 103, MachineId = 1, ProductId = 4, TransactionDate = new DateTime(2025, 10, 15), SalePrice = 3.00m },
+			var slots = new List<MachineSlot>();
+			int slotIdCounter = 1;
 
-                // --- Transakcje z Września 2025 ---
-                new Transaction { Id = 104, MachineId = 1, ProductId = 3, TransactionDate = new DateTime(2025, 9, 5), SalePrice = 3.50m },
-                new Transaction { Id = 105, MachineId = 1, ProductId = 10, TransactionDate = new DateTime(2025, 9, 6), SalePrice = 3.50m },
-                new Transaction { Id = 106, MachineId = 2, ProductId = 4, TransactionDate = new DateTime(2025, 9, 10), SalePrice = 3.50m },
-                new Transaction { Id = 107, MachineId = 1, ProductId = 2, TransactionDate = new DateTime(2025, 9, 20), SalePrice = 3.00m },
-                new Transaction { Id = 133, MachineId = 2, ProductId = 4, TransactionDate = new DateTime(2025, 9, 11), SalePrice = 3.50m },
+			void AddSlotsForMachine(int machineId, int[] productIds, int[] quantities)
+			{
+				for (int i = 0; i < productIds.Length; i++)
+				{
+					slots.Add(new MachineSlot
+					{
+						Id = slotIdCounter++,
+						MachineId = machineId,
+						ProductId = productIds[i],
+						Capacity = 20,
+						Quantity = quantities[i]
+					});
+				}
+			}
 
-                // --- Transakcje z Sierpnia 2025 ---
-                new Transaction { Id = 108, MachineId = 2, ProductId = 4, TransactionDate = new DateTime(2025, 8, 10), SalePrice = 3.50m },
-                new Transaction { Id = 109, MachineId = 2, ProductId = 10, TransactionDate = new DateTime(2025, 8, 15), SalePrice = 3.00m },
-                new Transaction { Id = 131, MachineId = 2, ProductId = 10, TransactionDate = new DateTime(2025, 8, 15), SalePrice = 3.00m },
-                new Transaction { Id = 134, MachineId = 2, ProductId = 3, TransactionDate = new DateTime(2025, 8, 13), SalePrice = 3.50m },
-                new Transaction { Id = 132, MachineId = 2, ProductId = 2, TransactionDate = new DateTime(2025, 8, 7), SalePrice = 3.50m },
+			AddSlotsForMachine(1, new[] { 1, 2, 3, 4 }, new[] { 5, 8, 2, 15 });
+			AddSlotsForMachine(2, new[] { 1, 2, 5, 6 }, new[] { 18, 19, 20, 15 });
+			AddSlotsForMachine(3, new[] { 1, 3, 4 }, new[] { 1, 2, 0 });
+			AddSlotsForMachine(4, new[] { 1, 2, 3, 4, 5, 6 }, new[] { 10, 10, 10, 10, 5, 5 });
+			AddSlotsForMachine(5, new[] { 4, 5 }, new[] { 12, 15 });
+			AddSlotsForMachine(6, new[] { 3, 1 }, new[] { 5, 10 });
 
-                // --- Transakcje z Lipca 2025 ---
-                new Transaction { Id = 110, MachineId = 1, ProductId = 2, TransactionDate = new DateTime(2025, 7, 5), SalePrice = 3.00m },
-                new Transaction { Id = 111, MachineId = 2, ProductId = 3, TransactionDate = new DateTime(2025, 7, 8), SalePrice = 3.50m },
-                new Transaction { Id = 112, MachineId = 1, ProductId = 4, TransactionDate = new DateTime(2025, 7, 10), SalePrice = 3.50m },
-                new Transaction { Id = 113, MachineId = 2, ProductId = 10, TransactionDate = new DateTime(2025, 7, 15), SalePrice = 3.00m },
-                new Transaction { Id = 114, MachineId = 1, ProductId = 2, TransactionDate = new DateTime(2025, 7, 20), SalePrice = 3.00m },
-                new Transaction { Id = 115, MachineId = 1, ProductId = 3, TransactionDate = new DateTime(2025, 7, 25), SalePrice = 3.50m },
-                new Transaction { Id = 116, MachineId = 2, ProductId = 4, TransactionDate = new DateTime(2025, 7, 28), SalePrice = 3.50m },
+			modelBuilder.Entity<MachineSlot>().HasData(slots);
 
-                // --- Transakcje z Czerwca 2025 ---
-                new Transaction { Id = 117, MachineId = 1, ProductId = 10, TransactionDate = new DateTime(2025, 6, 2), SalePrice = 3.00m },
-                new Transaction { Id = 118, MachineId = 2, ProductId = 2, TransactionDate = new DateTime(2025, 6, 5), SalePrice = 3.00m },
-                new Transaction { Id = 119, MachineId = 1, ProductId = 3, TransactionDate = new DateTime(2025, 6, 7), SalePrice = 3.50m },
-                new Transaction { Id = 120, MachineId = 2, ProductId = 4, TransactionDate = new DateTime(2025, 6, 11), SalePrice = 3.50m },
-                new Transaction { Id = 121, MachineId = 1, ProductId = 10, TransactionDate = new DateTime(2025, 6, 15), SalePrice = 3.00m },
-                new Transaction { Id = 122, MachineId = 2, ProductId = 2, TransactionDate = new DateTime(2025, 6, 20), SalePrice = 3.00m },
-                new Transaction { Id = 123, MachineId = 1, ProductId = 3, TransactionDate = new DateTime(2025, 6, 25), SalePrice = 3.50m },
-                new Transaction { Id = 124, MachineId = 2, ProductId = 10, TransactionDate = new DateTime(2025, 6, 29), SalePrice = 3.00m },
+			var transactions = new List<Transaction>();
+			int transIdCounter = 1;
+			var random = new Random(12345);
 
-                // --- Transakcje z Maja 2025 ---
-                new Transaction { Id = 125, MachineId = 1, ProductId = 4, TransactionDate = new DateTime(2025, 5, 5), SalePrice = 3.50m },
-                new Transaction { Id = 126, MachineId = 2, ProductId = 2, TransactionDate = new DateTime(2025, 5, 10), SalePrice = 3.00m },
-                new Transaction { Id = 127, MachineId = 1, ProductId = 3, TransactionDate = new DateTime(2025, 5, 15), SalePrice = 3.50m },
-                new Transaction { Id = 128, MachineId = 2, ProductId = 10, TransactionDate = new DateTime(2025, 5, 20), SalePrice = 3.00m },
-                new Transaction { Id = 129, MachineId = 1, ProductId = 4, TransactionDate = new DateTime(2025, 5, 25), SalePrice = 3.50m },
-                new Transaction { Id = 130, MachineId = 2, ProductId = 2, TransactionDate = new DateTime(2025, 5, 28), SalePrice = 3.00m }
-            );
-        }
-    }
+			var productPrices = new Dictionary<int, decimal>
+			{
+				{ 1, 4.50m }, { 2, 4.50m }, { 3, 2.50m }, { 4, 7.00m }, { 5, 3.00m }, { 6, 3.50m }
+			};
+
+			int[] machinesWithTraffic = { 1, 1, 1, 2, 2, 3, 4, 4, 4, 5, 5, 6 };
+
+			DateTime startDate = new DateTime(2025, 1, 1);
+			DateTime endDate = seedDate;
+
+			for (var day = startDate; day <= endDate; day = day.AddDays(1))
+			{
+				int dailyTransactions = random.Next(0, 6);
+
+				if (day.DayOfWeek == DayOfWeek.Saturday || day.DayOfWeek == DayOfWeek.Sunday)
+				{
+					dailyTransactions += random.Next(2, 5);
+				}
+
+				for (int i = 0; i < dailyTransactions; i++)
+				{
+					int machineId = machinesWithTraffic[random.Next(machinesWithTraffic.Length)];
+					int productId = random.Next(1, 7);
+
+					int hour = random.Next(8, 23);
+					int minute = random.Next(0, 60);
+
+					transactions.Add(new Transaction
+					{
+						Id = transIdCounter++,
+						MachineId = machineId,
+						ProductId = productId,
+						TransactionDate = new DateTime(day.Year, day.Month, day.Day, hour, minute, 0),
+						SalePrice = productPrices[productId]
+					});
+				}
+			}
+
+			modelBuilder.Entity<Transaction>().HasData(transactions);
+		}
+	}
 }

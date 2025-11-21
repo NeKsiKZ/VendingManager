@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VendingManager.Data;
 
@@ -11,9 +12,11 @@ using VendingManager.Data;
 namespace VendingManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251121125055_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -258,9 +261,9 @@ namespace VendingManager.Migrations
                         {
                             Id = 1,
                             LastContact = new DateTime(2025, 11, 20, 11, 55, 0, 0, DateTimeKind.Unspecified),
-                            Latitude = 53.116900000000001,
+                            Latitude = 53.128,
                             Location = "Hol wejściowy, Budynek A",
-                            Longitude = 23.1465,
+                            Longitude = 23.152999999999999,
                             Name = "Automat POLITECHNIKA",
                             Status = "Online"
                         },
@@ -268,9 +271,9 @@ namespace VendingManager.Migrations
                         {
                             Id = 2,
                             LastContact = new DateTime(2025, 11, 20, 11, 45, 0, 0, DateTimeKind.Unspecified),
-                            Latitude = 53.130000000000003,
+                            Latitude = 53.129899999999999,
                             Location = "Opera, Główne wejście",
-                            Longitude = 23.150200000000002,
+                            Longitude = 23.168800000000001,
                             Name = "Automat OPERA",
                             Status = "Online"
                         },
