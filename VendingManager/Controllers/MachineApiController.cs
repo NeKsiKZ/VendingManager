@@ -55,14 +55,20 @@ namespace VendingManager.Controllers
         public async Task<IActionResult> RecordSale(int id, [FromBody] SaleRequestDto saleRequest)
         {
             var slot = await _context.MachineSlots
-                .FirstOrDefaultAsync(s => s.MachineId == id && s.ProductId == saleRequest.ProductId);
+				.Include(s => s.Machine)
+				.FirstOrDefaultAsync(s => s.MachineId == id && s.ProductId == saleRequest.ProductId);
 
             if (slot == null)
             {
                 return NotFound(new { message = "Błąd: Nie znaleziono slotu dla tego produktu w tej maszynie." });
             }
 
-            if (slot.Quantity <= 0)
+			if (slot.Machine.IsUnderMaintenance)
+			{
+				return StatusCode(503, new { message = "Maszyna jest w trybie serwisowym. Zakup niemożliwy." });
+			}
+
+			if (slot.Quantity <= 0)
             {
                 return BadRequest(new { message = "Błąd: Stan magazynowy dla tego produktu wynosi 0." });
             }
