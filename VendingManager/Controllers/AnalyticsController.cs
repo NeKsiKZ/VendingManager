@@ -6,6 +6,9 @@ using VendingManager.Filters;
 
 namespace VendingManager.Controllers
 {
+	/// <summary>
+	/// Kontroler odpowiedzialny za agregację danych i statystyki biznesowe.
+	/// </summary>
 	[ServiceFilter(typeof(ApiKeyAuthFilter))]
 	[Route("api/[controller]")]
 	[ApiController]
@@ -18,8 +21,22 @@ namespace VendingManager.Controllers
 			_context = context;
 		}
 
+
+
 		// GET: api/analytics/revenue/daily?days=30
+		/// <summary>
+		/// Pobiera zagregowane dane o przychodach dziennych z wybranego okresu.
+		/// </summary>
+		/// <remarks>
+		/// Dane są grupowane po dacie transakcji. Idealne do generowania wykresów liniowych.
+		/// </remarks>
+		/// <param name="days">Liczba ostatnich dni do analizy (domyślnie 30).</param>
+		/// <returns>Lista obiektów zawierających datę, sumę przychodu i liczbę transakcji.</returns>
+		/// <response code="200">Zwraca listę danych analitycznych.</response>
+		/// <response code="401">Brak ważnego klucza API.</response>
 		[HttpGet("revenue/daily")]
+		[ProducesResponseType(typeof(IEnumerable<DailyRevenueDto>), 200)]
+		[ProducesResponseType(401)]
 		public async Task<ActionResult<IEnumerable<DailyRevenueDto>>> GetDailyRevenue([FromQuery] int days = 30)
 		{
 			var startDate = DateTime.Now.Date.AddDays(-days);
@@ -47,7 +64,13 @@ namespace VendingManager.Controllers
 		}
 
 		// GET: api/analytics/products/top?count=5
+		/// <summary>
+		/// Zwraca ranking najlepiej sprzedających się produktów (Bestsellery).
+		/// </summary>
+		/// <param name="count">Liczba produktów w rankingu (domyślnie 5).</param>
+		/// <returns>Lista produktów posortowana malejąco według liczby sprzedanych sztuk.</returns>
 		[HttpGet("products/top")]
+		[ProducesResponseType(typeof(IEnumerable<ProductPopularityDto>), 200)]
 		public async Task<ActionResult<IEnumerable<ProductPopularityDto>>> GetTopProducts([FromQuery] int count = 5)
 		{
 			var data = await _context.Transactions
@@ -68,7 +91,12 @@ namespace VendingManager.Controllers
 		}
 
 		// GET: api/analytics/machines/performance
+		/// <summary>
+		/// Pobiera ranking wydajności finansowej poszczególnych automatów.
+		/// </summary>
+		/// <returns>Lista maszyn z ich całkowitym przychodem i średnią wartością koszyka.</returns>
 		[HttpGet("machines/performance")]
+		[ProducesResponseType(typeof(IEnumerable<MachinePerformanceDto>), 200)]
 		public async Task<ActionResult<IEnumerable<MachinePerformanceDto>>> GetMachinePerformance()
 		{
 			var data = await _context.Transactions

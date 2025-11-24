@@ -6,6 +6,9 @@ using VendingManager.Filters;
 
 namespace VendingManager.Controllers
 {
+	/// <summary>
+	/// Kontroler obsługujący funkcje geolokalizacyjne (wyszukiwanie przestrzenne).
+	/// </summary>
 	[ServiceFilter(typeof(ApiKeyAuthFilter))]
 	[Route("api/[controller]")]
 	[ApiController]
@@ -19,7 +22,18 @@ namespace VendingManager.Controllers
 		}
 
 		// GET: api/geo/nearest?lat=53.1325&lon=23.1688&radiusKm=5
+		/// <summary>
+		/// Wyszukuje najbliższe automaty w zadanym promieniu od użytkownika.
+		/// </summary>
+		/// <remarks>
+		/// Wykorzystuje wzór Haversine'a do obliczania odległości na sferze.
+		/// </remarks>
+		/// <param name="lat">Szerokość geograficzna użytkownika.</param>
+		/// <param name="lon">Długość geograficzna użytkownika.</param>
+		/// <param name="radiusKm">Promień wyszukiwania w kilometrach (domyślnie 10km).</param>
+		/// <returns>Lista maszyn posortowana od najbliższej, wraz z dystansem.</returns>
 		[HttpGet("nearest")]
+		[ProducesResponseType(typeof(IEnumerable<NearestMachineDto>), 200)]
 		public async Task<ActionResult<IEnumerable<NearestMachineDto>>> GetNearestMachines(
 			[FromQuery] double lat,
 			[FromQuery] double lon,

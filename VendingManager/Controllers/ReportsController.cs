@@ -6,6 +6,9 @@ using VendingManager.Filters;
 
 namespace VendingManager.Controllers
 {
+	/// <summary>
+	/// Kontroler do generowania raportów i eksportu danych.
+	/// </summary>
 	[ServiceFilter(typeof(ApiKeyAuthFilter))]
 	[Route("api/[controller]")]
 	[ApiController]
@@ -19,7 +22,21 @@ namespace VendingManager.Controllers
 		}
 
 		// GET: api/reports/sales/csv?month=11&year=2025
+		/// <summary>
+		/// Generuje raport sprzedaży za wybrany okres i zwraca go jako plik CSV.
+		/// </summary>
+		/// <remarks>
+		/// Plik jest generowany dynamicznie w pamięci i zwracany jako strumień bajtów.
+		/// Format CSV zawiera: ID Transakcji, Datę, Czas, Nazwę Automatu, Nazwę Produktu oraz Cenę.
+		/// </remarks>
+		/// <param name="month">Numer miesiąca (1-12).</param>
+		/// <param name="year">Rok (np. 2025).</param>
+		/// <returns>Plik CSV gotowy do pobrania.</returns>
+		/// <response code="200">Zwraca plik CSV, jeśli znaleziono transakcje.</response>
+		/// <response code="404">Brak transakcji w wybranym okresie.</response>
 		[HttpGet("sales/csv")]
+		[ProducesResponseType(typeof(FileContentResult), 200)]
+		[ProducesResponseType(404)]
 		public async Task<IActionResult> ExportSalesToCsv([FromQuery] int month, [FromQuery] int year)
 		{
 			var transactions = await _context.Transactions

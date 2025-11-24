@@ -61,7 +61,11 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Interfejs API do zarządzania automatami vendingowymi."
     });
 
-    options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+	var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+	var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+	options.IncludeXmlComments(xmlPath);
+
+	options.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
         Name = "X-API-KEY",

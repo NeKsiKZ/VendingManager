@@ -5,6 +5,9 @@ using VendingManager.Filters;
 
 namespace VendingManager.Controllers
 {
+	/// <summary>
+	/// Kontroler serwisowy do zdalnego zarządzania stanem maszyn i rozwiązywania problemów.
+	/// </summary>
 	[ServiceFilter(typeof(ApiKeyAuthFilter))]
 	[Route("api/[controller]")]
 	[ApiController]
@@ -18,7 +21,22 @@ namespace VendingManager.Controllers
 		}
 
 		// POST: api/maintenance/{machineId}/toggle-mode
+		/// <summary>
+		/// Przełącza tryb serwisowy maszyny (Włącz/Wyłącz).
+		/// </summary>
+		/// <remarks>
+		/// Gdy maszyna jest w trybie serwisowym (IsUnderMaintenance = true):
+		/// 1. Status maszyny zmienia się na "Maintenance".
+		/// 2. API blokuje możliwość dokonywania zakupów (zwraca kod 503).
+		/// Użyj tego endpointu przed rozpoczęciem prac serwisowych.
+		/// </remarks>
+		/// <param name="machineId">ID Automatu.</param>
+		/// <returns>Aktualny stan maszyny po przełączeniu.</returns>
+		/// <response code="200">Stan maszyny został zmieniony.</response>
+		/// <response code="404">Nie znaleziono maszyny o podanym ID.</response>
 		[HttpPost("{machineId}/toggle-mode")]
+		[ProducesResponseType(200)]
+		[ProducesResponseType(404)]
 		public async Task<IActionResult> ToggleMaintenanceMode(int machineId)
 		{
 			var machine = await _context.Machines.FindAsync(machineId);
@@ -47,7 +65,18 @@ namespace VendingManager.Controllers
 		}
 
 		// POST: api/maintenance/{machineId}/restock-all
+		/// <summary>
+		/// Uzupełnia wszystkie sloty w maszynie do pełna.
+		/// </summary>
+		/// <remarks>
+		/// Ustawia ilość produktów (Quantity) na równą pojemności slotu (Capacity) dla wszystkich produktów w danej maszynie.
+		/// Operacja jest wykonywana masowo w jednej transakcji bazy danych.
+		/// </remarks>
+		/// <param name="machineId">ID Automatu.</param>
+		/// <returns>Informację o liczbie zaktualizowanych slotów.</returns>
 		[HttpPost("{machineId}/restock-all")]
+		[ProducesResponseType(200)]
+		[ProducesResponseType(404)]
 		public async Task<IActionResult> RestockAll(int machineId)
 		{
 			var rowsAffected = await _context.MachineSlots
@@ -64,7 +93,16 @@ namespace VendingManager.Controllers
 		}
 
 		// DELETE: api/maintenance/{machineId}/errors
+		/// <summary>
+		/// Usuwa całą historię błędów dla danej maszyny.
+		/// </summary>
+		/// <remarks>
+		/// Należy użyć tego endpointu po fizycznym usunięciu usterki przez serwisanta, aby wyczyścić logi.
+		/// </remarks>
+		/// <param name="machineId">ID Automatu.</param>
+		/// <returns>Liczbę usuniętych wpisów.</returns>
 		[HttpDelete("{machineId}/errors")]
+		[ProducesResponseType(200)]
 		public async Task<IActionResult> ClearErrors(int machineId)
 		{
 			var deletedCount = await _context.MachineErrorLogs
@@ -75,7 +113,20 @@ namespace VendingManager.Controllers
 		}
 
 		// POST: api/maintenance/{machineId}/reboot
+		/// <summary>
+		/// Symuluje zdalny restart (reboot) urządzenia.
+		/// </summary>
+		/// <remarks>
+		/// Akcja ta:
+		/// 1. Resetuje status maszyny na "Online".
+		/// 2. Wyłącza tryb serwisowy (jeśli był włączony).
+		/// 3. Aktualizuje datę ostatniego kontaktu (LastContact).
+		/// </remarks>
+		/// <param name="machineId">ID Automatu.</param>
+		/// <returns>Potwierdzenie restartu.</returns>
 		[HttpPost("{machineId}/reboot")]
+		[ProducesResponseType(200)]
+		[ProducesResponseType(404)]
 		public async Task<IActionResult> RebootMachine(int machineId)
 		{
 			var machine = await _context.Machines.FindAsync(machineId);
