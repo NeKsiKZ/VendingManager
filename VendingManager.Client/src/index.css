@@ -1,7 +1,69 @@
-.leaflet-pane img, 
-.leaflet-tile, 
-.leaflet-marker-icon, 
-.leaflet-marker-shadow {
-    max-width: none !important;
-    max-height: none !important;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.img-zoom {
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.group:hover .img-zoom {
+    transform: scale(1.15);
+}
+
+.dark .leaflet-popup-content-wrapper,
+.dark .leaflet-popup-tip {
+    background-color: #171717;
+    color: #e5e5e5;
+    border: 1px solid #404040;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+}
+
+.dark .leaflet-control-zoom a {
+    background-color: #171717 !important;
+    color: #e5e5e5 !important;
+    border-bottom-color: #404040 !important;
+}
+.dark .leaflet-control-zoom {
+    border: 2px solid #404040 !important;
+    border-radius: 4px;
+}
+.dark .leaflet-control-zoom a:hover {
+    background-color: #262626 !important;
+    color: white !important;
+}
+.dark .leaflet-control-zoom a.leaflet-disabled {
+    background-color: #171717 !important;
+    color: #525252 !important;
+}
+
+.dark .leaflet-control-attribution {
+    background-color: rgba(23, 23, 23, 0.8) !important;
+    color: #a3a3a3 !important;
+    border-top-left-radius: 8px;
+}
+.dark .leaflet-control-attribution a {
+    color: #60a5fa !important;
+}
+
+.leaflet-attribution-flag {
+    display: none !important;
+}
+
+.custom-pin {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.dark .custom-pin-online {
+    filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.5));
+}
+.dark .custom-pin-offline {
+    filter: drop-shadow(0 0 10px rgba(248, 113, 113, 0.5));
 }
