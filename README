@@ -1,172 +1,127 @@
-🚀 VendingManager: IoT Vending Machine Management System
+<div align="center">
 
-VendingManager is a comprehensive Full-Stack system simulating the management of a network of intelligent vending machines (IoT). The project demonstrates a modern, distributed architecture combining a server-side rendered administrative panel (MVC), a public client application (SPA), and real-time communication.
+  <h1>🥤 VendingManager</h1>
+  
+  <p>
+    <strong>A modern, full-stack solution for managing vending machine fleets in real-time.</strong>
+  </p>
 
-The application is fully containerized using Docker & Docker Compose and deployed on Microsoft Azure cloud.
+  <p>
+    <a href="#-about-the-project">About The Project</a> •
+    <a href="#-key-features">Key Features</a> •
+    <a href="#-tech-stack">Tech Stack</a> •
+    <a href="#-getting-started">Getting Started</a> •
+    <a href="#-deployment">Deployment</a> •
+    <a href="#-screenshots">Screenshots</a>
+  </p>
 
-🌐 Live Demo
+  <p>
+    <img src="https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 8" />
+    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
+    <img src="https://img.shields.io/badge/Azure-0078D4?style=for-the-badge&logo=microsoft-azure&logoColor=white" alt="Azure" />
+    <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+    <img src="https://img.shields.io/badge/SignalR-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt="SignalR" />
+  </p>
 
-The application is fully deployed and available online:
+</div>
 
-🔐 1. Admin Panel (Backend & MVC)
+<br />
 
-Fleet management, sales analytics, logistics.
+## 📖 About The Project
 
-Link: https://vendingmanager-app-bz123.purpleflower-915564b1.polandcentral.azurecontainerapps.io/
+**VendingManager** is a comprehensive dashboard designed to help administrators monitor and maintain a network of vending machines efficiently. Unlike traditional static dashboards, this application leverages **SignalR** for real-time updates, allowing immediate reaction to sales, stock depletions, or machine errors as they happen.
 
-Credentials:
+The project is built with a **Headless Architecture** mindset:
+* **Backend:** Robust ASP.NET Core API hosted on **Azure Container Apps**.
+* **Frontend:** Modern React Client (SPA) hosted on **Vercel**.
 
-Email: admin@vending.com
+It was designed with **Mobile First** principles, ensuring field technicians can use the system comfortably on their smartphones while restocking machines or troubleshooting errors on-site.
 
-Password: Admin123!
+---
 
-🛒 2. Client App (React Frontend)
+## 🚀 Key Features
 
-Public interface for customers with an interactive map and virtual store.
+### 📊 Interactive Dashboard
+* **Real-time updates:** Sales and errors pop up instantly via WebSockets (SignalR) without refreshing the page.
+* **Financial Analysis:** Interactive charts showing revenue trends over time.
+* **Live Map:** Leaflet integration showing machine locations and status (Online/Offline) with custom, dynamic markers.
 
-Link: https://vending-manager-client-3zg5pn9sj-neksikzs-projects.vercel.app/
+### 📦 Smart Inventory & Restocking
+* **Route Optimization:** Automatically generates a "Service Route" for machines needing attention.
+* **Shopping List:** Aggregates all missing products across the fleet into a single purchasing list.
+* **Low Stock Alerts:** Visual indicators for critically low inventory levels.
 
-📖 3. API Documentation (Swagger)
+### 📱 Modern UX/UI
+* **Dark Mode:** Fully supported, system-wide dark theme that respects user preferences.
+* **Responsive Design:** Optimized layout for Desktop, Tablet, and Mobile usage (including touch-friendly tables).
+* **Smooth Animations:** Powered by **Framer Motion** for a premium, app-like feel.
 
-Link: https://vendingmanager-app-bz123.purpleflower-915564b1.polandcentral.azurecontainerapps.io/swagger
+---
 
-🏗️ Architecture & Tech Stack
+## 🛠 Tech Stack
 
-The project was built with a focus on clean code, security, and scalability.
+| Area | Technology |
+| :--- | :--- |
+| **Backend** | .NET 8, ASP.NET Core Web API, Entity Framework Core |
+| **Frontend** | React 18, Vite, Tailwind CSS v4, Framer Motion |
+| **Database** | SQL Server, Azure Blob Storage (Data Protection Keys) |
+| **Real-time** | SignalR (WebSockets) |
+| **DevOps** | Docker, Azure Container Registry (ACR), Azure Container Apps |
+| **Mapping** | Leaflet.js, OpenStreetMap |
+| **Testing** | xUnit, InMemory Database |
 
-Backend (.NET 8)
+---
 
-Architecture: Hybrid (MVC for Admin Panel + REST API for devices/frontend).
+## 📸 Screenshots
 
-Database: SQL Server (Azure SQL Database) using Entity Framework Core.
+<div align="center">
+  <h3>Desktop Dashboard</h3>
+  <img src="https://placehold.co/800x450/1e293b/ffffff?text=Dashboard+Desktop+View" alt="Dashboard Screenshot" width="800" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+</div>
 
-Real-Time: SignalR for live sales notifications and error reporting.
+<br />
 
-Security:
+<div align="center" style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+  <div>
+    <h3>Mobile View</h3>
+    <img src="https://placehold.co/300x600/1e293b/ffffff?text=Mobile+App" alt="Mobile View" width="280" style="border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" />
+  </div>
+  <div>
+    <h3>Dark Mode</h3>
+    <img src="https://placehold.co/300x600/0f172a/ffffff?text=Dark+Mode" alt="Dark Mode" width="280" style="border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" />
+  </div>
+</div>
 
-ASP.NET Core Identity (Roles: Admin, Operator).
+> *Note: Replace the placeholder images above with actual screenshots from your application by uploading them to a `docs/images` folder.*
 
-API Key Authorization Filters (X-API-KEY) for M2M communication.
+---
 
-CORS policy for React client.
+## ⚡ Getting Started
 
-Storage: Azure Blob Storage for storing product images and Data Protection Keys.
+### Prerequisites
+* [Docker Desktop](https://www.docker.com/products/docker-desktop)
+* [.NET 8 SDK](https://dotnet.microsoft.com/download)
+* [Node.js](https://nodejs.org/) (v18+)
 
-Frontend (React + Vite)
-
-UI: Responsive design based on Bootstrap 5.
-
-Maps: Integration with Leaflet.js and React-Leaflet for fleet visualization.
-
-State Management: Context API (shopping cart handling).
-
-Communication: fetch API for consuming .NET backend.
-
-DevOps & QA
-
-Containerization: Full Docker and Docker Compose support (Multi-container setup).
-
-Cloud: Deployed to Azure Container Apps (Backend) and Vercel (Frontend).
-
-CI/CD: Automated GitHub Actions pipelines (Build & Test).
-
-Testing:
-
-xUnit: Unit tests for controllers and business logic.
-
-Playwright: End-to-End (E2E) tests verifying frontend behavior.
-
-✨ Key Features
-
-1. Analytics Dashboard (Business Intelligence)
-
-Real-time transaction data aggregation.
-
-Dynamic sales charts (Chart.js) with date range filtering (Backend-side filtering).
-
-Interactive map with markers changing color based on machine status (Online/Offline) and stock levels.
-
-2. Shopping Simulator (Live)
-
-User purchases a product in the React app.
-
-Backend processes the transaction and updates the stock in SQL Server.
-
-SignalR instantly pushes a "Toast" notification to the logged-in Administrator without refreshing the page.
-
-3. Smart Logistics
-
-The "Restocking" module automatically analyzes stock levels across all machines and generates:
-
-A consolidated shopping list (what to pick from the warehouse).
-
-A route list of machines requiring maintenance.
-
-4. Error Management
-
-The API accepts technical error reports from machines (e.g., "Coin Jam"), which are logged and presented to the administrator.
-
-🚀 Local Setup (Docker)
-
-The easiest way to run the entire system (App + DB) on your local machine. Requires Docker Desktop.
-
-Clone the repository:
-
-git clone https://github.com/NeKsiKZ/VendingManager.git
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/NeKsiKZ/VendingManager.git]
 cd VendingManager
 
-
-Configure Environment Variables:
-Create a .env file in the root solution directory and add a strong DB password:
-
-SA_PASSWORD=YourStrongPassword123!
-
-
-(Optional) Create .env.local in VendingManager.Client for API Key configuration.
-
-Run Containers:
-
+### 2. Run with Docker Compose (Recommended)
+The easiest way to spin up the Database and Backend services.
+```bash
 docker-compose up --build
 
+### 3. Run Frontend
+Open a new terminal tab for the client application.
+```bash
+cd VendingManager.Client
+npm install
+npm run dev
 
-Ready! The application will automatically run database migrations and seed the database with test data.
+The application will be available at http://localhost:5173.
 
-Store (React): http://localhost:8080 (or http://localhost:5173 via npm run dev)
+---
 
-Admin Panel: http://localhost:8080
-
-Swagger API: http://localhost:8080/swagger
-
-🧪 Testing
-
-The project maintains high test coverage to ensure stability.
-
-Backend Unit Tests
-
-dotnet test
-
-
-Tests: API logic, Dashboard statistics calculation, restocking list generation.
-
-Frontend E2E Tests
-
-Tests written in Playwright simulate user behavior in the browser.
-(Requires running application).
-
-// Example E2E Test Scenario (Playwright)
-[Test]
-public async Task Homepage_Should_Load_And_Show_Machines() {
-    await Page.GotoAsync(AppUrl);
-    // Wait for the second card to appear (ensuring data is fetched)
-    await Expect(Page.Locator(".card").Nth(1)).ToBeVisibleAsync();
-    // ...
-}
-
-
-👤 Author
-
-Bartosz Zimnoch
-
-LinkedIn: www.linkedin.com/in/bartosz-zimnoch-342113255
-
-GitHub: github.com/NeKsiKZ
