@@ -610,7 +610,7 @@ function App() {
             </div>
 
             <div className="text-xs text-gray-400 dark:text-neutral-600">
-              &copy; 2025 VendingManager. Wszelkie prawa zastrzeżone.
+              &copy; 2025 VendingManager. Wszelkie prawa zastrzeżone. Bartosz Zimnoch
             </div>
           </div>
         </div>

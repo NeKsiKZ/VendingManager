@@ -15,9 +15,13 @@ builder.Services.AddCors(options =>
 	options.AddPolicy("AllowReactFrontend",
 		policy =>
 		{
-			policy.AllowAnyOrigin()
-				  .AllowAnyHeader()
-				  .AllowAnyMethod();
+			policy.SetIsOriginAllowed(origin =>
+			{
+				var host = new Uri(origin).Host;
+				return host == "localhost" || host.EndsWith(".vercel.app");
+			})
+				.AllowAnyHeader()
+				.AllowAnyMethod();
 		});
 });
 
@@ -45,7 +49,11 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 .AddDefaultTokenProviders();
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+	.AddJsonOptions(options =>
+	{
+		options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+	});
 
 builder.Services.AddSignalR();
 

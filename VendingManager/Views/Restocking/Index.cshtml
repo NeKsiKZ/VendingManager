@@ -1,110 +1,176 @@
 ﻿@model VendingManager.ViewModels.RestockingViewModel
 
 @{
-    ViewData["Title"] = "Lista do Zatowarowania";
+    ViewData["Title"] = "Zatowarowanie";
+
+    var totalItemsToBuy = Model.ShoppingList.Sum(x => x.TotalNeeded);
+    var machinesToVisit = Model.RouteList.Count;
 }
 
-<style>
+<div class="container-fluid px-0">
 
-    .accordion-body table th:nth-child(1),
-    .accordion-body table td:nth-child(1) {
-        width: 45%;
-    }
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-6 fw-bold text-primary mb-0">Zatowarowanie</h1>
+            <p class="text-muted mb-0">Lista zakupów i trasa uzupełniania automatów.</p>
+        </div>
+    </div>
 
-    .accordion-body table th:nth-child(2),
-    .accordion-body table td:nth-child(2) {
-        width: 25%;
-    }
-
-    .accordion-body table th:nth-child(3),
-    .accordion-body table td:nth-child(3) {
-        width: 30%;
-    }
-
-</style>
-
-<div class="text-center">
-    <h1 class="display-4">@ViewData["Title"]</h1>
-    <p class="lead text-muted">Automatyczne podsumowanie na podstawie slotów z zapełnieniem poniżej 25%.</p>
-</div>
-
-<hr />
-
-<div class="row g-4">
-    <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-header">
-                <h4>Lista Zakupów</h4>
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-md-6">
+            <div class="card h-100 border-0 shadow-sm bg-white">
+                <div class="card-body d-flex align-items-center">
+                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                        <i class="bi bi-cart-check display-6 text-primary"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted text-uppercase fw-bold small mb-1">Łącznie do kupienia</h6>
+                        <h2 class="mb-0 fw-bold">@totalItemsToBuy <small class="fs-6 text-muted fw-normal">szt.</small></h2>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                @if (Model.ShoppingList.Any())
-                {
-                    <ul class="list-group list-group-flush">
-                        @foreach (var item in Model.ShoppingList)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <strong>@item.ProductName</strong>
-                                <span class="badge bg-primary rounded-pill fs-6">
-                                    @item.TotalNeeded szt.
-                                </span>
-                            </li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <p class="text-success">Wszystkie automaty są w pełni zatowarowane!</p>
-                }
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card h-100 border-0 shadow-sm bg-white">
+                <div class="card-body d-flex align-items-center">
+                    <div class="rounded-circle bg-warning bg-opacity-10 p-3 me-3">
+                        <i class="bi bi-truck display-6 text-warning"></i>
+                    </div>
+                    <div>
+                        <h6 class="text-muted text-uppercase fw-bold small mb-1">Przystanki na trasie</h6>
+                        <h2 class="mb-0 fw-bold text-dark">@machinesToVisit</h2>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-8">
-        <h4>Lista Maszyn do Odwiedzenia (@Model.RouteList.Count)</h4>
+    <div class="row g-4">
 
-        @if (Model.RouteList.Any())
-        {
-            <div class="accordion" id="machineAccordion">
-                @foreach (var machine in Model.RouteList)
-                {
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading-@machine.MachineId">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@machine.MachineId" aria-expanded="true" aria-controls="collapse-@machine.MachineId">
-                                <strong>@machine.MachineName</strong> <span class="text-muted ms-2">(@machine.MachineLocation)</span>
-                            </button>
-                        </h2>
-                        <div id="collapse-@machine.MachineId" class="accordion-collapse collapse show" aria-labelledby="heading-@machine.MachineId">
-                            <div class="accordion-body">
-                                <table class="table table-sm table-borderless">
-                                    <thead>
-                                        <tr>
-                                            <th>Produkt</th>
-                                            <th>Aktualny Stan</th>
-                                            <th class="text-danger">Do Uzupełnienia</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var slot in machine.SlotsToRestock)
-                                        {
-                                            <tr>
-                                                <td>@slot.ProductName</td>
-                                                <td>@slot.CurrentQuantity / @slot.Capacity</td>
-                                                <td class="text-danger">
-                                                    <strong>@slot.AmountToRefill szt.</strong>
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+        <div class="col-12 col-lg-4 order-2 order-lg-1">
+            <div class="sticky-top" style="top: 100px; z-index: 1;">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="card-title fw-bold mb-0">
+                            <i class="bi bi-basket me-2 text-primary"></i>Lista Zakupów
+                        </h5>
                     </div>
-                }
+                    <div class="card-body p-0">
+                        @if (Model.ShoppingList.Any())
+                        {
+                            <div style="max-height: 70vh; overflow-y: auto;">
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var item in Model.ShoppingList)
+                                    {
+                                        <li class="list-group-item d-flex justify-content-between align-items-center py-3 px-4">
+                                            <span class="fw-bold text-dark">@item.ProductName</span>
+                                            <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 border border-primary border-opacity-10">
+                                                @item.TotalNeeded szt.
+                                            </span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="p-3 bg-light text-center border-top rounded-bottom">
+                                <small class="text-muted">Suma produktów: <strong>@totalItemsToBuy</strong></small>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-5 px-3">
+                                <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex p-3 mb-3">
+                                    <i class="bi bi-check-lg text-success fs-1"></i>
+                                </div>
+                                <h5 class="fw-bold text-success">Magazyny pełne!</h5>
+                                <p class="text-muted small mb-0">Brak produktów wymagających zakupu.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
-        }
-        else
-        {
-            <p class="text-success">Brak maszyn wymagających interwencji.</p>
-        }
+        </div>
+
+        <div class="col-12 col-lg-8 order-1 order-lg-2">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="card-title fw-bold mb-0">
+                        <i class="bi bi-map me-2 text-warning"></i>Trasa Serwisowa
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    @if (Model.RouteList.Any())
+                    {
+                        <div class="accordion accordion-flush" id="machineAccordion">
+                            @foreach (var machine in Model.RouteList)
+                            {
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading-@machine.MachineId">
+                                        <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@machine.MachineId">
+                                            <div class="d-flex flex-column flex-md-row w-100 pe-3 align-items-md-center">
+                                                <span class="fw-bold text-dark me-3 fs-5">@machine.MachineName</span>
+                                                <div class="text-muted small d-flex align-items-center mt-1 mt-md-0">
+                                                    <i class="bi bi-geo-alt me-1"></i> @machine.MachineLocation
+                                                </div>
+                                                <span class="badge bg-danger bg-opacity-10 text-danger ms-md-auto mt-2 mt-md-0 px-3 py-2 rounded-pill border border-danger border-opacity-10">
+                                                    Braków: @machine.SlotsToRestock.Sum(s => s.AmountToRefill)
+                                                </span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse-@machine.MachineId" class="accordion-collapse collapse" data-bs-parent="#machineAccordion">
+                                        <div class="accordion-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover align-middle mb-0 bg-light bg-opacity-25">
+                                                    <thead class="table-light text-muted small text-uppercase">
+                                                        <tr>
+                                                            <th class="ps-4 py-3">Produkt</th>
+                                                            <th class="py-3">Stan / Pojemność</th>
+                                                            <th class="text-end pe-4 py-3 text-danger">Do uzupełnienia</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var slot in machine.SlotsToRestock)
+                                                        {
+                                                            <tr>
+                                                                <td class="ps-4 fw-bold text-dark">@slot.ProductName</td>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center" style="min-width: 140px;">
+                                                                        <div class="progress flex-grow-1 me-3 bg-white border" style="height: 8px;">
+                                                                            @{
+                                                                                var percent = (double)slot.CurrentQuantity / slot.Capacity * 100;
+                                                                                var color = percent < 25 ? "bg-danger" : "bg-warning";
+                                                                            }
+                                                                            <div class="progress-bar @color" style="width: @percent%"></div>
+                                                                        </div>
+                                                                        <small class="text-muted fw-bold">@slot.CurrentQuantity / @slot.Capacity</small>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="text-end pe-4">
+                                                                    <span class="fw-bold text-danger fs-5">+@slot.AmountToRefill</span>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5 px-3">
+                            <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex p-3 mb-3">
+                                <i class="bi bi-emoji-smile text-success fs-1"></i>
+                            </div>
+                            <h5 class="fw-bold text-success">Wszystkie automaty zatowarowane!</h5>
+                            <p class="text-muted small mb-0">Brak wymaganych interwencji serwisowych.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </div>
