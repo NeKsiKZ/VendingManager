@@ -1,79 +1,86 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using VendingManager.Models
-
 @model IEnumerable<VendingManager.Models.AppUser>
 @inject UserManager<AppUser> UserManager
 
 @{
-    ViewData["Title"] = "Zarządzanie Użytkownikami";
+    ViewData["Title"] = "Użytkownicy";
+    var userCount = Model.Count();
 }
 
-<div class="row">
-    <div class="col-md-10 mx-auto">
-
-        <div class="text-center mb-4">
-            <h1 class="display-4">@ViewData["Title"]</h1>
-            <p class="lead text-muted">Zarządzaj kontami użytkowników i ich uprawnieniami.</p>
+<div class="container-fluid px-0">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-6 fw-bold text-dark mb-0">Użytkownicy</h1>
+            <p class="text-muted mb-0">Administracja dostępem do systemu.</p>
         </div>
+        <div class="mt-3 mt-md-0">
+            <span class="badge bg-white text-dark shadow-sm border px-3 py-2 rounded-pill">
+                <i class="bi bi-people-fill me-2 text-primary"></i> Razem: @userCount
+            </span>
+        </div>
+    </div>
 
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h4 class="mb-0">Lista Zarejestrowanych Użytkowników</h4>
-            </div>
-
-            <ul class="list-group list-group-flush">
-
-                <li class="list-group-item d-none d-md-flex">
-                    <div class="fw-bold col-4">Użytkownik (Email)</div>
-                    <div class="fw-bold col-4">Przypisane Role</div>
-                    <div class="fw-bold col-4 text-end">Akcje</div>
-                </li>
-
-                @foreach (var user in Model)
-                {
-                    <li class="list-group-item d-flex flex-wrap justify-content-between align-items-center">
-
-                        <div class="col-12 col-md-4 mb-2 mb-md-0">
-                            <strong>@user.UserName</strong>
-                         
-                            @if (user.EmailConfirmed)
-                            {
-                                <span class="badge bg-success">Potwierdzony</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-warning text-dark">Niepotwierdzony</span>
-                            }
-                        </div>
-
-                        <div class="col-12 col-md-4 mb-2 mb-md-0">
-                            @{
-                                var roles = await UserManager.GetRolesAsync(user);
-                            }
-                            @if (roles.Any())
-                            {
-                                @foreach (var role in roles)
-                                {
-                                    <span class="badge bg-secondary me-1">@role</span>
-                                }
-                            }
-                            else
-                            {
-                                <span class="text-muted fst-italic">Brak ról</span>
-                            }
-                        </div>
-
-                            <div class="col-12 col-md-4 text-md-end">
-                                <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-sm btn-outline-info">Szczegóły</a>
-                                <a asp-action="ManageRoles" asp-route-id="@user.Id" class="btn btn-sm btn-outline-warning">Zarządzaj Rolami</a>
-                                <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-outline-danger">Usuń</a>
-                            </div>
-                    </li>
-                }
-            </ul>
-
-            <div class="card-footer">
-                <small class="text-muted">Użytkowników można dodawać przez publiczną stronę "Register".</small>
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0 py-3">
+            <h5 class="card-title fw-bold mb-0">Konta w systemie</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Użytkownik</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Akcje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-dark">@user.UserName</div>
+                                    <small class="text-muted">@user.Email</small>
+                                </td>
+                                <td>
+                                    @{
+                                        var roles = await UserManager.GetRolesAsync(user);
+                                    }
+                                    @if (roles.Any())
+                                    {
+                                        @foreach (var role in roles)
+                                        {
+                                            <span class="badge bg-primary bg-opacity-10 text-primary me-1">@role</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small fst-italic">Brak ról</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (user.EmailConfirmed)
+                                    {
+                                        <span class="badge bg-success rounded-pill">Zweryfikowany</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning text-dark rounded-pill">Oczekuje</span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group">
+                                        <a asp-action="ManageRoles" asp-route-id="@user.Id" class="btn btn-sm btn-light text-primary"><i class="bi bi-shield-lock"></i></a>
+                                        <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-sm btn-light text-info"><i class="bi bi-person-vcard"></i></a>
+                                        <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-light text-danger"><i class="bi bi-person-x"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
