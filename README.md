@@ -92,6 +92,7 @@ cd VendingManager
 ```
 ### 2. Configuring Environment Variables (API Keys)
 Before launching, make sure you have configured your API keys.
+
 **Backend** ```VendingManager/appsettings.json```:
 ```bash
 "ApiKey": "Your_Secret_API_key"
