@@ -123,7 +123,7 @@ The API is fully documented using **Swagger**. Once the backend is running local
 
 ```http://localhost:8080/swagger```
 
-Or on the live Azure environment (if deployed): ```https://your-app-name.azurecontainerapps.io/swagger```
+Or on the live Azure environment (if deployed): ```https://vendingmanager-app-bz123.purpleflower-915564b1.polandcentral.azurecontainerapps.io/swagger```
 
 ---
 
