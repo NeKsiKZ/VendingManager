@@ -93,11 +93,15 @@ cd VendingManager
 ### 2. Configuring Environment Variables (API Keys)
 Before launching, make sure you have configured your API keys.
 **Backend** ```VendingManager/appsettings.json```:
-```"ApiKey": "Your_Secret_API_key"```
+```bash
+"ApiKey": "Your_Secret_API_key"
+```
 
 **Frontend** ```VendingManager.Client/.env```:
-```VITE_API_KEY=Your_Secret_API_key```
-```VITE_API_URL=http://localhost:5000/api/machine```
+```bash
+VITE_API_KEY=Your_Secret_API_key
+VITE_API_URL=http://localhost:5000/api/machine
+```
 
 ### 3. Run with Docker Compose (Recommended)
 ```bash
