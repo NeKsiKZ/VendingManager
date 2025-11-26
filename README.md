@@ -71,7 +71,7 @@ Note: The backend runs on a serverless plan, so the first request might take a f
 
 ## 📸 Screenshots
 
-![Alt text](/readmepng/dashboard.jpg "Dashboard")
+![image alt](https://github.com/NeKsiKZ/VendingManager/blob/main/readmepng/dashboard.png?raw=true)
 
 ## ⚡ Getting Started
 
