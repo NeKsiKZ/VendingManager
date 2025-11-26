@@ -90,13 +90,21 @@ Note: The backend runs on a serverless plan, so the first request might take a f
 git clone https://github.com/NeKsiKZ/VendingManager.git
 cd VendingManager
 ```
+### 2. Configuring Environment Variables (API Keys)
+Before launching, make sure you have configured your API keys.
+**Backend** ```VendingManager/appsettings.json```:
+```"ApiKey": "Your_Secret_API_key"```
 
-### 2. Run with Docker Compose (Recommended)
+**Frontend** ```VendingManager.Client/.env```:
+```VITE_API_KEY=Your_Secret_API_key```
+```VITE_API_URL=http://localhost:5000/api/machine```
+
+### 3. Run with Docker Compose (Recommended)
 ```bash
 docker-compose up --build
 ```
 
-### 3. Run Frontend
+### 4. Run Frontend
 Open a new terminal tab for the client application.
 ```bash
 cd VendingManager.Client
