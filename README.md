@@ -72,8 +72,11 @@ Note: The backend runs on a serverless plan, so the first request might take a f
 ## 📸 Screenshots
 
 ![image alt](https://github.com/NeKsiKZ/VendingManager/blob/main/readmepng/dashboard.png?raw=true)
-![image alt](https://github.com/NeKsiKZ/VendingManager/blob/main/readmepng/frontend.png?raw=true)
+
 ![image alt](https://github.com/NeKsiKZ/VendingManager/blob/main/readmepng/swagger.png?raw=true)
+
+![image alt](https://github.com/NeKsiKZ/VendingManager/blob/main/readmepng/frontend.png?raw=true)
+
 
 ## ⚡ Getting Started
 
