@@ -23,5 +23,5 @@ namespace VendingManager.Models
 		public bool IsUnderMaintenance { get; set; } = false;
 
 		public virtual ICollection<MachineSlot> Slots { get; set; } = new List<MachineSlot>();
-    }
+	}
 }

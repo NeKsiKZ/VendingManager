@@ -24,7 +24,8 @@ namespace VendingManager.Controllers
         // GET: Machines
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Machines.ToListAsync());
+            var machines = await _context.Machines.Include(m => m.Slots).ToListAsync();
+            return View(machines);
         }
 
         // GET: Machines/Details/5

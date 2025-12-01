@@ -22,14 +22,30 @@ namespace VendingManager.Controllers
         }
 
         // GET: Transactions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? pageNumber)
         {
-            var transactions = _context.Transactions
-                                           .Include(t => t.Machine)
-                                           .Include(t => t.Product)
-                                           .OrderByDescending(t => t.TransactionDate);
+            int pageSize = 50;
+            int pageIndex = pageNumber ?? 1;
 
-            return View(await transactions.ToListAsync());
+            var transactionsQuery = _context.Transactions
+                .Include(t => t.Machine)
+                .Include(t => t.Product)
+                .OrderByDescending(t => t.TransactionDate)
+                .AsNoTracking();
+
+            var totalCount = await transactionsQuery.CountAsync();
+
+            var items = await transactionsQuery
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            ViewBag.TotalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+            ViewBag.CurrentPage = pageIndex;
+            ViewBag.HasPrevious = pageIndex > 1;
+            ViewBag.HasNext = pageIndex < ViewBag.TotalPages;
+
+            return View(items);
         }
 
         // GET: Transactions/Details/5

@@ -1,143 +1,96 @@
-﻿@model IEnumerable<VendingManager.Models.Machine>
+﻿@using System.Linq
+@using System.Globalization
+@model IEnumerable<VendingManager.Models.Machine>
 
 @{
     ViewData["Title"] = "Automaty";
-
-    var totalMachines = Model.Count();
-    var onlineMachines = Model.Count(m => m.Status == "Online");
-    var offlineMachines = Model.Count(m => m.Status != "Online");
 }
 
-<div class="container-fluid px-0">
-
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="display-6 fw-bold text-primary mb-0">Zarządzanie Automatami</h1>
-            <p class="text-muted mb-0">Monitoruj i zarządzaj flotą urządzeń.</p>
+            <h1 class="display-6 fw-bold text-primary mb-0">Automaty</h1>
+            <p class="text-muted small">Zarządzanie flotą maszyn vendingowych.</p>
         </div>
-        <div class="mt-3 mt-md-0">
-            <a asp-action="Create" class="btn btn-primary shadow-sm px-4 rounded-pill">
-                <i class="bi bi-plus-lg"></i> Dodaj Automat
-            </a>
-        </div>
+        <a asp-action="Create" class="btn btn-primary shadow-sm rounded-pill px-4">
+            <i class="bi bi-plus-lg me-2"></i>Dodaj Automat
+        </a>
     </div>
 
-    <div class="row g-4 mb-4">
-        <div class="col-12 col-md-4">
-            <div class="card h-100 border-0 shadow-sm bg-white">
-                <div class="card-body d-flex align-items-center">
-                    <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
-                        <i class="bi bi-hdd-rack display-6 text-primary"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-muted text-uppercase fw-bold small mb-1">Wszystkie Urządzenia</h6>
-                        <h2 class="mb-0 fw-bold">@totalMachines</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4 py-3">Nazwa / Lokalizacja</th>
+                        <th class="py-3">Status</th>
+                        <th class="py-3" style="width: 25%;">Zapełnienie</th>
+                        <th class="py-3">Ostatni kontakt</th>
+                        <th class="text-end pe-4 py-3">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var totalCapacity = item.Slots != null ? item.Slots.Sum(s => s.Capacity) : 0;
+                        var currentStock = item.Slots != null ? item.Slots.Sum(s => s.Quantity) : 0;
+                        var fillPercentage = totalCapacity > 0 ? (double)currentStock / totalCapacity * 100 : 0;
 
-        <div class="col-12 col-md-4">
-            <div class="card h-100 border-0 shadow-sm bg-white">
-                <div class="card-body d-flex align-items-center">
-                    <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
-                        <i class="bi bi-wifi display-6 text-success"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-muted text-uppercase fw-bold small mb-1">Status Online</h6>
-                        <h2 class="mb-0 fw-bold text-success">@onlineMachines</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        string barColor = "bg-success";
+                        if (fillPercentage < 40) barColor = "bg-warning";
+                        if (fillPercentage < 15) barColor = "bg-danger";
 
-        <div class="col-12 col-md-4">
-            <div class="card h-100 border-0 shadow-sm bg-white">
-                <div class="card-body d-flex align-items-center">
-                    <div class="rounded-circle bg-danger bg-opacity-10 p-3 me-3">
-                        <i class="bi bi-exclamation-octagon display-6 text-danger"></i>
-                    </div>
-                    <div>
-                        <h6 class="text-muted text-uppercase fw-bold small mb-1">Wymaga Uwagi</h6>
-                        <h2 class="mb-0 fw-bold text-danger">@offlineMachines</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-            <h5 class="card-title fw-bold mb-0">Lista Urządzeń</h5>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
                         <tr>
-                            <th class="ps-4">Nazwa / ID</th>
-                            <th>Lokalizacja</th>
-                            <th>Status</th>
-                            <th class="d-none d-md-table-cell">Ostatni Kontakt</th>
-                            <th class="text-end pe-4">Akcje</th>
+                            <td class="ps-4">
+                                <div class="fw-bold text-dark">@item.Name</div>
+                                <div class="small text-muted"><i class="bi bi-geo-alt me-1"></i>@item.Location</div>
+                            </td>
+                            <td>
+                                @if (item.Status == "Online")
+                                {
+                                    <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">Online</span>
+                                }
+                                else if (item.Status == "Maintenance")
+                                {
+                                    <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill">Serwis</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill">Offline</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <span class="me-2 small fw-bold text-muted" style="width: 35px;">@fillPercentage.ToString("0")%</span>
+                                    <div class="progress flex-grow-1 shadow-none bg-light" style="height: 6px; border-radius: 10px;">
+                                        <div class="progress-bar @barColor"
+                                             role="progressbar"
+                                             style="width: @fillPercentage.ToString("0", CultureInfo.InvariantCulture)%; border-radius: 10px;"
+                                             aria-valuenow="@fillPercentage" aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-muted small">
+                                <i class="bi bi-clock me-1"></i>@item.LastContact.ToString("yyyy-MM-dd HH:mm")
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary border-0" title="Edytuj">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info border-0" title="Szczegóły">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger border-0" title="Usuń">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td class="ps-4">
-                                    <div class="fw-bold text-dark">@item.Name</div>
-                                    <small class="text-muted">ID: @item.Id</small>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <i class="bi bi-geo-alt text-secondary me-2"></i>
-                                        <span class="text-truncate" style="max-width: 250px;">@item.Location</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    @if (item.Status == "Online")
-                                    {
-                                        <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">
-                                            <i class="bi bi-check-circle-fill me-1"></i> Online
-                                        </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill">
-                                            <i class="bi bi-x-circle-fill me-1"></i> @item.Status
-                                        </span>
-                                    }
-                                </td>
-                                <td class="d-none d-md-table-cell text-muted small">
-                                    @if (item.LastContact != DateTime.MinValue)
-                                    {
-                                        <i class="bi bi-clock me-1"></i> @item.LastContact.ToString("yyyy-MM-dd HH:mm")
-                                    }
-                                    else
-                                    {
-                                        <span>-</span>
-                                    }
-                                </td>
-                                <td class="text-end pe-4">
-                                    <div class="btn-group">
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light text-primary" title="Szczegóły">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light text-dark" title="Edytuj">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-light text-danger" title="Usuń">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
