@@ -22,6 +22,12 @@ The application is deployed and publicly accessible!
 | **Backend** | https://vendingmanager-app-bz123.purpleflower-915564b1.polandcentral.azurecontainerapps.io/ | Azure Container Apps |
 | **Frontend** | https://vending-manager-client.vercel.app/ | Vercel |
 
+**To log in, use the following details:**
+
+**Email:** admin@vending.com
+
+**Password:** Admin123!
+
 Note: The backend runs on a serverless plan, so the first request might take a few seconds to wake up the container.
 
 
