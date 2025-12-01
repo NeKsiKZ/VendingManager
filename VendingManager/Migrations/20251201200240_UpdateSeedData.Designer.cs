@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VendingManager.Data;
 
@@ -11,9 +12,11 @@ using VendingManager.Data;
 namespace VendingManager.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251201200240_UpdateSeedData")]
+    partial class UpdateSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -383,9 +386,9 @@ namespace VendingManager.Migrations
                             Id = 12,
                             IsUnderMaintenance = false,
                             LastContact = new DateTime(2025, 11, 20, 11, 52, 0, 0, DateTimeKind.Unspecified),
-                            Latitude = 53.135800000000003,
+                            Latitude = 53.128500000000003,
                             Location = "Poziom +2, Korytarz",
-                            Longitude = 23.170200000000001,
+                            Longitude = 23.157499999999999,
                             Name = "Automat KOMENDA POLICJI",
                             Status = "Online"
                         });
