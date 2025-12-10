@@ -19,8 +19,8 @@ It was designed with **Mobile First** principles, ensuring field technicians can
 The application is deployed and publicly accessible!
 | Component | URL | Hosting Provider |
 | :--- | :--- | :--- |
-| **Backend** | https://vendingmanager-app-bz123.purpleflower-915564b1.polandcentral.azurecontainerapps.io/ | Azure Container Apps |
-| **Frontend** | https://vending-manager-client.vercel.app/ | Vercel |
+| **Backend** | [link](https://vendingmanager-app-bz123.purpleflower-915564b1.polandcentral.azurecontainerapps.io/) | Azure Container Apps |
+| **Frontend** | [link](https://vending-manager-client.vercel.app/) | Vercel |
 
 **To log in, use the following details:**
 
@@ -155,7 +155,7 @@ Or on the live Azure environment (if deployed): ```https://vendingmanager-app-bz
 
 Bartosz Zimnoch
 
-GitHub: https://github.com/NeKsiKZ
+GitHub: [link](https://github.com/NeKsiKZ)
 
 LinkedIn: [link](https://www.linkedin.com/in/zimnoch/)
 
