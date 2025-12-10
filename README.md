@@ -157,5 +157,5 @@ Bartosz Zimnoch
 
 GitHub: https://github.com/NeKsiKZ
 
-LinkedIn: [https://www.linkedin.com/in/bartosz-zimnoch-342113255/](https://www.linkedin.com/in/zimnoch/)
+LinkedIn: [link](https://www.linkedin.com/in/zimnoch/)
 
