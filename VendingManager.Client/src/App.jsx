@@ -93,7 +93,7 @@ function App() {
     try {
       for (const item of cartItems) {
         for (let i = 0; i < item.count; i++) {
-          await fetch(`${API_URL}/${item.machineId}/sale`, {
+          const response = await fetch(`${API_URL}/${item.machineId}/sale`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -101,13 +101,18 @@ function App() {
             },
             body: JSON.stringify({ productId: item.productId }),
           });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Błąd zakupu");
+          }
         }
       }
       showNotification("Zakup zakończony sukcesem!", "success");
       clearCart();
       if (selectedMachine) openMachineModal(selectedMachine);
     } catch (e) {
-      showNotification("Wystąpił błąd podczas zakupu.", "error");
+      showNotification(e.message || "Wystąpił błąd podczas zakupu.", "error");
     }
   };
 
