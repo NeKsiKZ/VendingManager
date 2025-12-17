@@ -93,12 +93,14 @@ namespace VendingManager.Controllers
                 return NotFound(new { message = "Błąd: Nie znaleziono slotu dla tego produktu w tej maszynie." });
             }
 
-			if (slot.Machine.IsUnderMaintenance)
-			{
-				return StatusCode(503, new { message = "Maszyna jest w trybie serwisowym. Zakup niemożliwy." });
-			}
+            if (slot.Machine.IsUnderMaintenance ||
+                slot.Machine.Status == "Maintenance" ||
+                slot.Machine.Status == "Offline")
+            {
+                return StatusCode(503, new { message = $"Maszyna jest niedostępna (Status: {slot.Machine.Status}). Zakup niemożliwy." });
+            }
 
-			if (slot.Quantity <= 0)
+            if (slot.Quantity <= 0)
             {
                 return BadRequest(new { message = "Błąd: Stan magazynowy dla tego produktu wynosi 0." });
             }
