@@ -3,7 +3,7 @@
 
 A modern, full-stack solution for managing vending machine fleets in real-time.
 --
-## 📖 About The Project
+## About The Project
 
 **VendingManager** is a comprehensive dashboard designed to help administrators monitor and maintain a network of vending machines efficiently. Unlike traditional static dashboards, this application leverages **SignalR** for real-time updates, allowing immediate reaction to sales, stock depletions, or machine errors as they happen.
 
@@ -15,7 +15,7 @@ It was designed with **Mobile First** principles, ensuring field technicians can
 
 ---
 
-## 🌐 Live Demo
+## Live Demo
 The application is deployed and publicly accessible!
 | Component | URL | Hosting Provider |
 | :--- | :--- | :--- |
@@ -32,36 +32,36 @@ Note: The backend runs on a serverless plan, so the first request might take a f
 
 
 
-## 🚀 Key Features
+## Key Features
 
-### 🔌 Secure IoT Machine Interface
+### Secure IoT Machine Interface
 * **API Key Authentication:** Each machine authenticates using a unique key (secured via ApiKeyAuthFilter), strictly preventing unauthorized access.
 * **Instant Sales Sync:** Sales data ```/sale``` is transmitted instantly, automatically updating inventory levels in the database in real-time.
 * **Remote Error Reporting:** Machines autonomously report technical faults (e.g., coin mechanism failure) directly to the administration panel.
 
-### 📊 Interactive Dashboard
+### Interactive Dashboard
 * **Real-time updates:** Sales and errors pop up instantly via WebSockets (SignalR) without refreshing the page.
 * **Financial Analysis:** Interactive charts showing revenue trends over time.
 * **Live Map:** Leaflet integration showing machine locations and status (Online/Offline) with custom, dynamic markers.
 
-### 📦 Smart Inventory & Restocking
+### Smart Inventory & Restocking
 * **Route Optimization:** Automatically generates a "Service Route" for machines needing attention.
 * **Shopping List:** Aggregates all missing products across the fleet into a single purchasing list.
 * **Low Stock Alerts:** Visual indicators for critically low inventory levels.
 
-### 🛡️ Management & Security
+### Management & Security
 * **Role-Based Access Control (RBAC):** A robust permission system ```UserManagementController``` that strictly distinguishes between Administrators and Service Technicians/Managers.
 * **Maintenance Mode:** A global switch ```MaintenanceController``` allowing administrators to safely take the system or specific API endpoints offline during updates.
 * **Audit Logs:** Detailed history tracking of machine errors ```MachineErrorLogsController``` to help identify recurring hardware malfunctions.
 
-### 📱 Modern UX/UI
+### Modern UX/UI
 * **Dark Mode:** Fully supported, system-wide dark theme that respects user preferences.
 * **Responsive Design:** Optimized layout for Desktop, Tablet, and Mobile usage.
 * **Smooth Animations:** Powered by **Framer Motion** for a premium, app-like feel.
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Area | Technology |
 | :--- | :--- |
@@ -75,7 +75,7 @@ Note: The backend runs on a serverless plan, so the first request might take a f
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 ![image alt](https://github.com/NeKsiKZ/VendingManager/blob/main/readmepng/dashboard.png?raw=true)
 
@@ -84,7 +84,7 @@ Note: The backend runs on a serverless plan, so the first request might take a f
 ![image alt](https://github.com/NeKsiKZ/VendingManager/blob/main/readmepng/frontend.png?raw=true)
 
 
-## ⚡ Getting Started
+## Getting Started
 
 ### Prerequisites
 * [Docker Desktop](https://www.docker.com/products/docker-desktop)
@@ -126,7 +126,7 @@ The application will be available at ```http://localhost:5173```.
 
 ---
 
-## ☁️ Deployment
+## Deployment
 The project is configured for cloud deployment using Containerization.
 
 **Backend (Azure)**
@@ -142,7 +142,7 @@ The React client is deployed on **Vercel**, utilizing modern CI/CD pipelines con
 
 ---
 
-## 📄 API Documentation
+## API Documentation
 The API is fully documented using **Swagger**. Once the backend is running locally, you can explore the endpoints at:
 
 ```http://localhost:8080/swagger```
@@ -151,7 +151,7 @@ Or on the live Azure environment (if deployed): ```https://vendingmanager-app-bz
 
 ---
 
-## 👤 Author
+## Author
 
 Bartosz Zimnoch
 
